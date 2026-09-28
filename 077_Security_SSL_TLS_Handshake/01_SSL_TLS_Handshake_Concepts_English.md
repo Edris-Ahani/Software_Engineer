@@ -36,7 +36,8 @@ sequenceDiagram
     S->>C: 9. Finished (Encrypted with Session Key)
     
     Note over C,S: Secure Symmetric Encryption Established (HTTPS)
-    C<->>S: 10. Application Data (Encrypted HTTP Traffic)
+    C->>S: 10. Application Data (Encrypted HTTP Traffic)
+    S->>C: 10. Application Data (Encrypted HTTP Traffic)
 ```
 
 This diagram shows exactly the process that happens between your browser (Client) and the website's server (Server) when you open a site with HTTPS (like a bank portal or email). This process is known as the TLS/SSL Handshake.
