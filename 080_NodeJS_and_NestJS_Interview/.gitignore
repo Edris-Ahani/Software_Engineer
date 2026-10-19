@@ -1,0 +1,23 @@
+# Dependencies & build output
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Logs & env secrets
+*.log
+npm-debug.log*
+.env
+.env.*
+!.env.example
+
+# Demo-generated runtime files
+005_streams_buffers/sample.txt
+007_http_performance/payload.txt
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

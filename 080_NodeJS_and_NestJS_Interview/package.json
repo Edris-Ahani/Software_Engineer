@@ -1,0 +1,46 @@
+{
+  "name": "nodejs-nestjs-interview-examples",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Runnable demos for Node.js and NestJS interview topics (sections 001-016)",
+  "scripts": {
+    "001": "node 001_runtime_architecture/index.js",
+    "002": "node 002_event_loop/index.js",
+    "003": "node 003_async_promises/index.js",
+    "004": "node 004_modules/index.js",
+    "005": "node 005_streams_buffers/index.js",
+    "006": "node 006_events_process/index.js",
+    "007": "node 007_http_performance/index.js",
+    "008": "node 008_errors_tooling/index.js",
+    "009": "npx ts-node --transpile-only 009_nestjs_core/main.ts",
+    "010": "npx ts-node --transpile-only 010_nestjs_di/main.ts",
+    "011": "npx ts-node --transpile-only 011_nestjs_pipeline/main.ts",
+    "012": "npx ts-node --transpile-only 012_nestjs_decorators/main.ts",
+    "013": "npx ts-node --transpile-only 013_nestjs_dynamic_lifecycle/main.ts",
+    "014": "npx ts-node --transpile-only 014_nestjs_advanced/main.ts",
+    "015": "npx ts-node --transpile-only 015_nestjs_testing/main.ts",
+    "016": "npx ts-node --transpile-only 016_nestjs_senior_combos/main.ts",
+    "all-node": "npm run 001 && npm run 002 && npm run 003 && npm run 004 && npm run 005 && npm run 006 && npm run 007 && npm run 008"
+  },
+  "dependencies": {
+    "@nestjs/cache-manager": "^2.3.0",
+    "@nestjs/common": "^10.4.15",
+    "@nestjs/config": "^3.3.0",
+    "@nestjs/core": "^10.4.15",
+    "@nestjs/microservices": "^10.4.15",
+    "@nestjs/platform-express": "^10.4.15",
+    "@nestjs/swagger": "^8.1.0",
+    "cache-manager": "^5.7.6",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^10.4.15",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.17.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
