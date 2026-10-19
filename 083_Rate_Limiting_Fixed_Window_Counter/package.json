@@ -1,0 +1,14 @@
+{
+  "name": "rate-limiting-fixed-window-counter",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npx ts-node --transpile-only demo.ts",
+    "demo": "npx ts-node --transpile-only demo.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
