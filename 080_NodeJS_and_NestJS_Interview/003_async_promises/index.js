@@ -67,7 +67,7 @@ async function runPromiseCombinators() {
   try {
     await Promise.any([delay(5, "a", true), delay(8, "b", true)]);
   } catch (e) {
-    step("Promise.any all failed", e.name);
+    step("Promise.any all failed", e.name,);
   }
 
   section("3) async function always returns a Promise");

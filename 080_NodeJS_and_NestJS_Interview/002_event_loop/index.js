@@ -10,15 +10,31 @@ title("002 | Event Loop & Task Queues");
 section("1) Ordering: sync → nextTick → Promise → timers/immediate");
 const order = [];
 
-order.push("1-sync");
+order.push("1-sync_1");
 
-process.nextTick(() => order.push("2-nextTick"));
+setTimeout(() => order.push("5-setTimeout-0"), 0);
 
-Promise.resolve().then(() => order.push("3-promise-microtask"));
+setImmediate(() => order.push("6-setImmediate"));
 
-setTimeout(() => order.push("4-setTimeout-0"), 0);
+process.nextTick(() => order.push("4-nextTick_1"));
 
-setImmediate(() => order.push("5-setImmediate"));
+Promise.resolve().then(() => order.push("6-promise-microtask_1"));
+
+queueMicrotask(() => order.push("7-queueMicrotask_1"));
+
+process.nextTick(() => order.push("5-nextTick_2"));
+
+Promise.resolve().then(() => order.push("7-promise-microtask_2"));
+
+queueMicrotask(() => order.push("8-queueMicrotask_2"));
+
+order.push("2-sync_2");
+order.push("3-sync_3");
+
+
+
+
+
 
 setTimeout(() => {
   step("Observed order", order.join(" → "));
@@ -33,9 +49,10 @@ function demoInsideIO() {
     const ioOrder = [];
     setTimeout(() => ioOrder.push("timeout"), 0);
     setImmediate(() => ioOrder.push("immediate"));
-    process.nextTick(() => ioOrder.push("nextTick"));
+    queueMicrotask(() => ioOrder.push("queueMicrotask"));
     Promise.resolve().then(() => ioOrder.push("promise"));
-
+    process.nextTick(() => ioOrder.push("nextTick"));
+    
     setTimeout(() => {
       step("Inside I/O callback order", ioOrder.join(" → "));
       note("Expected often: nextTick → promise → immediate → timeout");
@@ -71,7 +88,7 @@ function warnLag() {
   const expected = 50;
   const scheduled = Date.now();
   // Block ~80ms
-  const end = Date.now() + 80;
+  const end = Date.now() + 800;
   while (Date.now() < end) {}
 
   setTimeout(() => {
