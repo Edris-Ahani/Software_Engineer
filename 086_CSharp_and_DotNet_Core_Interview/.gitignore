@@ -1,0 +1,20 @@
+# Build
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE / OS
+.vs/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Secrets / local
+*.log
+.appsettings.*.local.json
+.env
+.env.*

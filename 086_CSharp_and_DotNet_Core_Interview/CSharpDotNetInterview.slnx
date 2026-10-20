@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/_shared/">
+    <Project Path="_shared/DemoLog/DemoLog.csproj" />
+  </Folder>
+  <Project Path="001_clr_runtime/001_clr_runtime.csproj" />
+  <Project Path="002_memory_gc/002_memory_gc.csproj" />
+  <Project Path="003_types_oop/003_types_oop.csproj" />
+  <Project Path="004_generics_linq/004_generics_linq.csproj" />
+  <Project Path="005_async_tasks/005_async_tasks.csproj" />
+  <Project Path="006_delegates_events/006_delegates_events.csproj" />
+  <Project Path="007_exceptions_dispose/007_exceptions_dispose.csproj" />
+  <Project Path="008_threading_parallel/008_threading_parallel.csproj" />
+  <Project Path="009_aspnet_core_pipeline/009_aspnet_core_pipeline.csproj" />
+  <Project Path="010_di_lifetimes/010_di_lifetimes.csproj" />
+  <Project Path="011_controllers_minimal_apis/011_controllers_minimal_apis.csproj" />
+  <Project Path="012_config_options/012_config_options.csproj" />
+  <Project Path="013_filters_validation/013_filters_validation.csproj" />
+  <Project Path="014_efcore_basics/014_efcore_basics.csproj" />
+  <Project Path="015_testing/015_testing.csproj" />
+  <Project Path="016_advanced_hosting/016_advanced_hosting.csproj" />
+</Solution>
