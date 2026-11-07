@@ -98,9 +98,9 @@ class RequestUser {
 }
 
 /**
- * Anti-pattern sketch: singleton depending on request-scoped service.
- * Nest will create a "durable" request-scoped chain or warn depending on version/setup.
- * We demonstrate the safer pattern: keep request state in REQUEST scope only.
+ * Explicit REQUEST scope communicates the facade's lifetime.
+ * A default-scoped facade depending on RequestUser would also become effectively
+ * request-scoped through scope bubbling; no automatic durable scope or warning.
  */
 @Injectable({ scope: Scope.REQUEST })
 class SafeFacade {
@@ -224,7 +224,7 @@ async function bootstrap() {
   const lib = await getJson(`${base}/lib/options`);
   step("forRootAsync options", lib.body);
   note("Export only what other modules need — keep feature modules loosely coupled");
-  warn("Do not inject REQUEST-scoped providers into long-lived singletons without a deliberate pattern");
+  warn("REQUEST dependencies make their consumers effectively request-scoped; consider the allocation cost");
   ok("Senior Nest interviews love pipeline + scope + dynamic module design tradeoffs");
 
   await app.close();

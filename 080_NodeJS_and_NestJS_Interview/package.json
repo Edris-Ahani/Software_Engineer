@@ -2,7 +2,7 @@
   "name": "nodejs-nestjs-interview-examples",
   "version": "1.0.0",
   "private": true,
-  "description": "Runnable demos for Node.js and NestJS interview topics (sections 001-016)",
+  "description": "Runnable demos for Node.js and NestJS interview topics (examples 001-020)",
   "scripts": {
     "001": "node 001_runtime_architecture/index.js",
     "002": "node 002_event_loop/index.js",
@@ -20,7 +20,13 @@
     "014": "npx ts-node --transpile-only 014_nestjs_advanced/main.ts",
     "015": "npx ts-node --transpile-only 015_nestjs_testing/main.ts",
     "016": "npx ts-node --transpile-only 016_nestjs_senior_combos/main.ts",
-    "all-node": "npm run 001 && npm run 002 && npm run 003 && npm run 004 && npm run 005 && npm run 006 && npm run 007 && npm run 008"
+    "017": "node 017_async_control/index.js",
+    "018": "node 018_context_streams/index.js",
+    "019": "ts-node 019_nestjs_contracts/main.ts",
+    "020": "ts-node 020_nestjs_testing_scopes/main.ts",
+    "typecheck": "tsc --noEmit",
+    "interview-extra": "npm run 017 && npm run 018 && npm run 019 && npm run 020",
+    "all-node": "npm run 001 && npm run 002 && npm run 003 && npm run 004 && npm run 005 && npm run 006 && npm run 007 && npm run 008 && npm run 017 && npm run 018"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^2.3.0",

@@ -2,7 +2,13 @@
 
 # سوالات مصاحبه: `Node.js` و `NestJS`
 
-مجموعه‌ای از سوالات مهم مصاحبه برای بک‌اند دولوپر، با تمرکز **فقط** روی فیچرها و ویژگی‌های زبان/`runtime` مربوط به `Node.js` و فریم‌ورک `NestJS`.
+راهنمای دوزبانهٔ مصاحبه از مبانی سطح Junior تا سناریوهای عملی Senior: زبان‌های JavaScript/TypeScript، محیط اجرای Node.js، فریم‌ورک NestJS و یکپارچه‌سازی‌های بک‌اند. هیچ فهرست ثابتی تمام مصاحبه‌ها را پوشش نمی‌دهد؛ علاوه بر تعریف‌ها، توضیح تصمیم، حالت شکست و هزینهٔ هر انتخاب را تمرین کنید.
+
+بخش‌های ۱ تا ۱۶ شامل ۹۵ سؤال اولیه و مثال‌های اجرایی `001` تا `016` هستند. بخش‌های ۱۷ تا ۳۲ بانک را به **۲۲۳ سؤال** گسترش می‌دهند. چهار مثال تکمیلی `017` تا `020` چند مبحث مرتبط را پوشش می‌دهند؛ شمارهٔ بخش‌های بعد از ۱۶ الزاماً برابر شمارهٔ مثال نیست. [راهنمای اجرا](00_HOW_TO_RUN_Persian.md) را ببینید.
+
+**مبنای نسخه:** مثال‌ها از وابستگی‌های موجود NestJS 10 / Express 4 / TypeScript 5 و APIهای Node.js 20.19+ استفاده می‌کنند. این عدد مبنای سازگاری آموزشی است؛ برای production نسخهٔ پشتیبانی‌شدهٔ روز را انتخاب کنید. تفاوت‌های NestJS 11 / Express 5 جداگانه مطرح شده‌اند و این تکمیل، وابستگی‌ها را ارتقا نمی‌دهد.
+
+**مسیر مطالعه:** Junior: بخش‌های ۱ تا ۱۲، ۱۷، ۱۸ و ۲۲. Mid-level: به‌علاوهٔ ۱۳ تا ۱۵، ۱۹ تا ۲۱، ۲۳ تا ۲۶ و ۲۹. Senior: به‌علاوهٔ ۱۶، ۲۷، ۲۸ و ۳۰ تا ۳۲. بخش‌های پایانی تمرین کدنویسی و تحلیل رخداد دارند.
 
 ---
 
@@ -14,7 +20,7 @@
 **پاسخ مورد انتظار:** `Node.js` یک `runtime` مبتنی بر موتور `V8` است که `JavaScript` را خارج از مرورگر اجرا می‌کند. دسترسی به `filesystem`، شبکه، `process` و ماژول‌های سیستمی دارد؛ در عوض `DOM` و `window` ندارد.
 
 ### ۲. چرا می‌گویند `Node.js` تک‌نخی (`single-threaded`) است؟
-**پاسخ مورد انتظار:** حلقهٔ اصلی اجرا (`Event Loop`) روی یک `thread` اصلی است. کد `JavaScript` شما معمولاً روی همان `thread` اجرا می‌شود؛ اما عملیات `I/O` سنگین از طریق `libuv` و `thread pool` به‌صورت غیرمسدودکننده انجام می‌شود.
+**پاسخ مورد انتظار:** اجرای JavaScript به‌طور پیش‌فرض در هر isolate روی یک thread انجام می‌شود؛ خود Node از امکانات سیستم‌عامل، workerهای libuv و threadهای پس‌زمینهٔ V8 هم استفاده می‌کند. شبکه معمولاً بر سازوکار آمادگی/تکمیل سیستم‌عامل تکیه دارد؛ فایل‌سیستم async، `dns.lookup` و بخشی از crypto/zlib از pool استفاده می‌کنند. پس هر عملیات async الزاماً worker نمی‌خواهد. Worker Threads برای JavaScript، isolateهای مستقل می‌سازند.
 
 ### ۳. نقش `libuv` در `Node.js` چیست؟
 **پاسخ مورد انتظار:** `libuv` لایهٔ انتزاعی برای `async I/O` است؛ `Event Loop`، `thread pool`، تایمرها، `filesystem`، سوکت‌ها و برخی عملیات سیستم‌عامل را مدیریت می‌کند.
@@ -43,7 +49,7 @@
 **پاسخ مورد انتظار:** ممکن است `Event Loop` قحطی (`starvation`) بگیرد و فازهای بعدی دیر اجرا شوند؛ چون صف `nextTick` قبل از ادامهٔ حلقه خالی می‌شود.
 
 ### ۹. تفاوت `macrotask` و `microtask` در `Node.js` چیست؟
-**پاسخ مورد انتظار:** `microtask`ها (مثل `Promise` و تا حدی رفتار `nextTick`) زودتر و با اولویت بالاتر نسبت به بسیاری از `macrotask`ها (مثل `setTimeout`/`setImmediate`) تخلیه می‌شوند.
+**پاسخ مورد انتظار:** callbackهای Promise و `queueMicrotask` در صف microtask هستند؛ `process.nextTick` صف اختصاصی Node را دارد. در مرز callbackهای معمول CJS، صف nextTick قبل از microtaskها تخلیه می‌شود؛ در سطح بالای ESM ممکن است ترتیب مشاهده‌شده فرق کند. timer و immediate به فازهای Event Loop تعلق دارند و macrotask اصطلاحی آموزشی است. تولید بازگشتی هر دو صف می‌تواند I/O را گرسنه نگه دارد.
 
 ### ۱۰. `Event Loop Lag` چیست و چرا مهم است؟
 **پاسخ مورد انتظار:** تأخیر بین زمان مورد انتظار اجرای یک کار و زمان واقعی اجرا. نشان‌دهندهٔ بلاک شدن `Event Loop` است و روی `latency` و `throughput` اثر مستقیم دارد.
@@ -79,6 +85,7 @@
 **پاسخ مورد انتظار:**
 - `CommonJS`: `require` / `module.exports`، بارگذاری همزمان‌تر و کلاسیک `Node.js`.
 - `ESM`: `import` / `export`، استاندارد زبان، پشتیبانی از `top-level await`، رفتار استاتیک‌تر برای تحلیل وابستگی.
+- ESM از live binding استفاده می‌کند. در CJS، exports ابتدا alias برای module.exports است؛ انتساب `exports = value` خروجی ماژول را عوض نمی‌کند. CJS دارای __dirname/__filename است؛ در ESM از امکانات import.meta متناسب با نسخه استفاده کنید. process.cwd پوشهٔ کاری است، نه الزاماً پوشهٔ ماژول.
 
 ### ۱۷. فایل را چهطور به عنوان `ESM` یا `CJS` علامت می‌زنید؟
 **پاسخ مورد انتظار:** با `"type": "module"` در `package.json`، یا پسوند `.mjs` / `.cjs`، و تنظیمات مرتبط در محیط اجرا.
@@ -87,7 +94,7 @@
 **پاسخ مورد انتظار:** اولین بار ماژول ارزیابی و در `require.cache` نگه داشته می‌شود؛ بارهای بعدی همان نمونهٔ کش‌شده را می‌گیرند (مگر کش پاک شود).
 
 ### ۱۹. `circular dependency` در ماژول‌های `Node.js` چه مشکلی ایجاد می‌کند؟
-**پاسخ مورد انتظار:** ممکن است یکی از ماژول‌ها قبل از تکمیل مقداردهی، مقدار ناقص (`partial exports`) ببیند و باگ‌های سخت ایجاد شود.
+**پاسخ مورد انتظار:** در CJS ممکن است exports نیمه‌مقداردهی‌شده دیده شود. ESM از live binding استفاده می‌کند و دسترسی زودهنگام به binding می‌تواند به `ReferenceError` ناشی از temporal dead zone برسد. با استخراج قرارداد مشترک یا تغییر جهت وابستگی چرخه را بشکنید؛ جابه‌جایی ترتیب فایل‌ها راه‌حل پایداری نیست.
 
 ### ۲۰. نقش `package.json` و فیلدهای مهم مثل `main`، `exports`، `type`، `engines` چیست؟
 **پاسخ مورد انتظار:** متادیتای پکیج، نقطهٔ ورود، کنترل `export`های عمومی، نوع ماژول، و نسخهٔ سازگار `Node.js`.
@@ -137,7 +144,7 @@
 **پاسخ مورد انتظار:** مثلاً `SIGINT`، `SIGTERM`، `exit`، `uncaughtException`، `unhandledRejection`؛ برای `graceful shutdown` مهم‌اند.
 
 ### ۳۲. `graceful shutdown` در سرویس `Node.js` یعنی چه؟
-**پاسخ مورد انتظار:** توقف پذیرش درخواست جدید، اتمام درخواست‌های جاری، بستن اتصالات (`DB`، صف، سرور HTTP) و سپس `process.exit` کنترل‌شده.
+**پاسخ مورد انتظار:** سرویس ابتدا unready می‌شود، کار جدید نمی‌پذیرد، درخواست‌ها و jobهای جاری را تا مهلت مشخص تخلیه می‌کند، سپس اتصال‌ها و telemetry را می‌بندد. خروج طبیعی با `process.exitCode` مناسب‌تر است؛ `process.exit()` فوری می‌تواند خروجی در انتظار را قطع کند و فقط پس از پایان مهلت، خروج اجباری لازم شود. داخل رویداد `exit` نمی‌توان پاکسازی async را تکمیل کرد.
 
 ---
 
@@ -166,13 +173,13 @@
 ## ۸. خطا، امنیت سطح runtime و ابزارها
 
 ### ۳۹. تفاوت `throw` در کد همزمان با `reject` در `Promise` چیست؟
-**پاسخ مورد انتظار:** `throw` همزمان اگر `catch` نشود می‌تواند به `uncaughtException` برسد؛ `reject` بدون `catch` به `unhandledRejection`.
+**پاسخ مورد انتظار:** throw همزمانِ گرفته‌نشده می‌تواند به uncaughtException برسد؛ rejected Promise بدون handler وارد سیاست unhandled rejection می‌شود. در Node مدرن سیاست پیش‌فرض می‌تواند آن را به exception کشنده ارتقا دهد؛ flag و listener بر رفتار اثر دارند. try/catch وقتی rejection را می‌گیرد که Promise را await یا به همان جریان مدیریت خطا متصل کرده باشید.
 
 ### ۴۰. آیا باید روی `uncaughtException` سرویس را زنده نگه داشت؟
 **پاسخ مورد انتظار:** معمولاً خیر؛ وضعیت برنامه ممکن است ناپایدار باشد. بهتر است لاگ، هشدار، و خروج کنترل‌شده انجام شود.
 
 ### ۴۱. `npm scripts`، `npx` و قفل وابستگی (`package-lock`) چه کمکی می‌کنند؟
-**پاسخ مورد انتظار:** اجرای وظایف پروژه، اجرای باینری پکیج‌ها، و بازتولیدپذیری نصب وابستگی‌ها در محیط‌های مختلف.
+**پاسخ مورد انتظار:** script وظیفهٔ پروژه را با binary محلی اجرا می‌کند؛ npx/npm exec ممکن است package غایب را دانلود کند، پس نام ناشناخته را بی‌بررسی اجرا نکنید. npm install می‌تواند lockfile را تغییر دهد؛ npm ci سازگاری را الزام و node_modules را بازسازی می‌کند. dependencies نیاز runtime، devDependencies ابزار build/test و peerDependencies قید سازگاری میزبان‌اند. بازهٔ semver ارتقا را مجاز و lockfile درخت resolve‌شده را ثبت می‌کند.
 
 ### ۴۲. `NODE_ENV` چه تأثیری معمولاً دارد؟
 **پاسخ مورد انتظار:** رفتار فریم‌ورک‌ها/کتابخانه‌ها در حالت `development` در مقابل `production` (کش، لاگ، بهینه‌سازی، پیام خطا).
@@ -227,7 +234,7 @@
 **پاسخ مورد انتظار:** وابستگی دایره‌ای بین ماژول‌ها/`provider`ها وقتی ارجاع مستقیم باعث خطای زمان بوت می‌شود.
 
 ### ۵۵. تفاوت `Optional` بودن وابستگی با الزامی بودن چیست؟
-**پاسخ مورد انتظار:** با `@Optional()` اگر provider موجود نباشد، به‌جای خطا `null`/`undefined` تزریق می‌شود.
+**پاسخ مورد انتظار:** با `@Optional()`، نبود dependency به‌جای شکست resolution مقدار `undefined` می‌دهد و مصرف‌کننده باید آن را مدیریت کند. dependency الزامی زیرساخت را بی‌دلیل optional نکنید.
 
 ---
 
@@ -261,6 +268,7 @@
 **پاسخ مورد انتظار:**
 - `transform`: ورودی را به نمونهٔ کلاس `DTO` تبدیل می‌کند.
 - `whitelist`: فیلدهای بدون دکوراتور را حذف می‌کند (جلوی over-posting).
+- منظور decorator اعتبارسنجی class-validator است، نه صرفاً هر decorator یا annotation نوع. `forbidNonWhitelisted: true` به‌جای حذف، فیلد اضافه را رد می‌کند. برای nested DTO هم validation و metadata نوع صریح لازم است؛ whitelist به‌تنهایی مجوز تغییر فیلد را تعیین نمی‌کند.
 
 ### ۶۵. `Exception Filter` چه می‌کند؟
 **پاسخ مورد انتظار:** شکل نهایی پاسخ خطا را کنترل می‌کند؛ می‌تواند سراسری یا برای exception خاص باشد (`@Catch()`).
@@ -298,13 +306,13 @@
 **پاسخ مورد انتظار:** ماژولی که در runtime با `forRoot`/`forRootAsync`/`register` پیکربندی می‌شود (مثل `ConfigModule`، `TypeOrmModule`).
 
 ### ۷۴. تفاوت `forRoot` و `forFeature` معمولاً چیست؟
-**پاسخ مورد انتظار:** `forRoot` پیکربندی سراسری یک‌بار؛ `forFeature` ثبت موجودیت‌ها/`provider`های دامنه در ماژول‌های ویژگی.
+**پاسخ مورد انتظار:** این نام‌ها قرارداد نام‌گذاری‌اند، نه متد رزروشدهٔ فریم‌ورک؛ forRoot معمولاً زیرساخت مشترک و forFeature provider/موجودیت feature را تنظیم می‌کند. forRoot خودکار global یا محدود به یک فراخوانی نیست؛ global بودن باید صریح تنظیم شود.
 
 ### ۷۵. `ConfigModule` و `ConfigService` چه می‌کنند؟
 **پاسخ مورد انتظار:** بارگذاری متغیرهای محیطی/فایل‌های کانفیگ و تزریق امن تنظیمات به سرویس‌ها با اعتبارسنجی اختیاری schema.
 
 ### ۷۶. lifecycle hookهای مهم `NestJS` کدام‌اند؟
-**پاسخ مورد انتظار:** مثلاً `onModuleInit`، `onApplicationBootstrap`، `onModuleDestroy`، `beforeApplicationShutdown`، `onApplicationShutdown`.
+**پاسخ مورد انتظار:** `onModuleInit`، `onApplicationBootstrap`، `onModuleDestroy`، `beforeApplicationShutdown` و `onApplicationShutdown`. برای واکنش به signal پشتیبانی‌شده enableShutdownHooks لازم است؛ app.close نیز shutdown hookها را اجرا می‌کند. کلاس request-scoped عضو lifecycle سراسری برنامه نیست و پشتیبانی signal در ویندوز تفاوت دارد.
 
 ### ۷۷. کاربرد این hookها در عمل چیست؟
 **پاسخ مورد انتظار:** اتصال به منابع هنگام بوت، گرم‌کردن کش، و بستن تمیز اتصال‌ها هنگام خاموشی.
@@ -358,7 +366,7 @@
 ## ۱۶. سوالات ترکیبی سطح ارشد (فقط فیچرمحور)
 
 ### ۹۰. اگر یک `singleton service` به سرویس `REQUEST`-scoped وابسته شود چه اتفاقی می‌افتد؟
-**پاسخ مورد انتظار:** مشکل scope؛ باید از الگوهای مجاز مثل تزریق `REQUEST` provider به صورت آگاهانه یا طراحی مجدد (مثلاً انتقال state وابسته به request خارج از singleton) استفاده شود. Nest در این حالت هشدار/محدودیت دارد.
+**پاسخ مورد انتظار:** scope درخواست در زنجیرهٔ تزریق به مصرف‌کننده سرایت می‌کند: سرویس با scope پیش‌فرض و کنترلر وابسته عملاً request-scoped می‌شوند. این رفتار پشتیبانی می‌شود، ولی تخصیص به‌ازای هر درخواست را بیشتر می‌کند؛ providerهای نامرتبط singleton می‌مانند. وابستگی TRANSIENT مصرف‌کننده را خودکار transient نمی‌کند. در صورت تناسب از پارامتر context یا AsyncLocalStorage استفاده کنید. مرجع: [Injection scopes](https://docs.nestjs.com/fundamentals/injection-scopes).
 
 ### ۹۱. تفاوت مسئولیت `Guard` و `Interceptor` و `Pipe` را در یک جمله برای هر کدام بگویید.
 **پاسخ مورد انتظار:**
@@ -380,6 +388,498 @@
 
 ---
 
+# بخش سوم: مبانی زبان و عمق بیشتر Node.js
+
+## ۱۷. مبانی JavaScript
+
+### ۹۶. تفاوت `var`، `let`، `const`، hoisting و TDZ چیست؟
+**پاسخ مورد انتظار:** `var` محدودهٔ تابع دارد و پیش از اجرای اعلان مقدارش `undefined` است؛ `let` و `const` محدودهٔ بلوک دارند و تا مقداردهی در temporal dead zone هستند. `const` جلوی انتساب مجدد را می‌گیرد، نه تغییر محتوای شیء. در حلقه، `let` برای هر تکرار binding مستقل می‌سازد؛ callbackهای `var` معمولاً یک binding مشترک را می‌بینند.
+
+### ۹۷. closure چه کاربردی دارد و چگونه حافظه را نگه می‌دارد؟
+**پاسخ مورد انتظار:** تابع بعد از پایان فراخوانی بیرونی نیز به محیط واژگانی خود دسترسی دارد؛ برای factory و کپسوله‌سازی مفید است. callback باقی‌مانده می‌تواند دادهٔ بزرگِ قابل‌دسترسی را زنده نگه دارد. listener و timer را آزاد کنید و retaining path را بررسی کنید؛ وجود closure به‌تنهایی نشتی نیست.
+
+### ۹۸. `this` چگونه تعیین می‌شود و arrow چه تفاوتی دارد؟
+**پاسخ مورد انتظار:** `this` تابع معمولی به نحوهٔ فراخوانی وابسته است؛ متد جداشده از شیء receiver خود را از دست می‌دهد. `call`، `apply` و `bind` آن را تعیین می‌کنند. arrow از محیط بیرونی `this` می‌گیرد و قابل rebind یا استفاده با `new` نیست. برای callback متد کلاس، binding یا wrapper لازم می‌شود.
+
+### ۹۹. prototype، class و وراثت چگونه کار می‌کنند؟
+**پاسخ مورد انتظار:** جست‌وجوی property در زنجیرهٔ prototype ادامه پیدا می‌کند. متد کلاس معمولاً روی prototype است، اما arrow field برای هر نمونه تابع جدا می‌سازد. class بر وراثت prototype-based، نحو و قواعد اضافه می‌کند. با `Object.hasOwn` property خود شیء را تشخیص دهید؛ composition اغلب از زنجیرهٔ وراثت شکننده جلوگیری می‌کند.
+
+### ۱۰۰. تفاوت `===`، `==`، `Object.is`، `null` و `undefined` چیست؟
+**پاسخ مورد انتظار:** `===` تبدیل ضمنی نوع ندارد و اشیا را با هویت مقایسه می‌کند. `Object.is` برای `NaN` برابری و برای صفر مثبت/منفی تمایز قائل است. undefined معمولاً نبود/مقداردهی‌نشدن و null نبود صریح است. `??` فقط برای nullish جایگزین می‌دهد؛ `||` مقادیر معتبر `0`، `false` و رشتهٔ خالی را هم عوض می‌کند.
+
+### ۱۰۱. کپی سطحی، عمیق و محدودیت `structuredClone` چیست؟
+**پاسخ مورد انتظار:** spread و `Object.assign` تنها یک سطح را کپی می‌کنند و referenceهای داخلی مشترک‌اند. JSON roundtrip بعضی نوع‌ها را از بین می‌برد و با cycle یا BigInt شکست می‌خورد. structuredClone چرخه و بسیاری از نوع‌های داخلی را می‌پذیرد، اما تابع و رفتار دلخواه کلاس را حفظ نمی‌کند. `Object.freeze` نیز سطحی است و با کپی‌کردن تفاوت دارد.
+
+### ۱۰۲. چه زمانی Object، Map، Set یا WeakMap انتخاب می‌کنید؟
+**پاسخ مورد انتظار:** Object برای رکورد، Map برای کلیدهای دلخواه و iteration/size روشن، و Set برای یکتاسازی طبق قواعد برابری خودش مناسب است. کلید WeakMap مانع جمع‌آوری شیء غیرقابل‌دسترسی نمی‌شود و قابل enumerate نیست. دو شیء با محتوای یکسان، خودکار کلید یکسان محسوب نمی‌شوند؛ الگوی دسترسی و مالکیت را بسنجید.
+
+### ۱۰۳. دام‌های destructuring، spread/rest و optional chaining چیست؟
+**پاسخ مورد انتظار:** مقدار پیش‌فرض destructuring برای undefined اعمال می‌شود، نه null. spread برای دادهٔ تو‌در‌تو سطحی است. optional chaining فقط مسیر محافظت‌شده را کنترل می‌کند و اعتبارسنجی payload نیست؛ `a?.b` اگر خود a تعریف نشده باشد خطا می‌دهد. فیلد الزامیِ گمشده را با default ظاهراً معتبر پنهان نکنید.
+
+---
+
+## ۱۸. TypeScript برای NestJS
+
+### ۱۰۴. `type`، `interface` و class زمان اجرا چه تفاوتی دارند؟
+**پاسخ مورد انتظار:** type و interface قرارداد زمان کامپایل‌اند و حذف می‌شوند؛ interface قابلیت declaration merging دارد و type برای union و mapped type هم کاربرد دارد. class در runtime سازنده دارد و می‌تواند token تزریق و منبع metadata DTO باشد. برای تزریق interface باید token واقعی و صریح تعریف کنید.
+
+### ۱۰۵. `any`، `unknown`، `never` و narrowing چیست؟
+**پاسخ مورد انتظار:** any بررسی نوع را کنار می‌زند؛ unknown قبل از مصرف به بررسی و narrowing نیاز دارد. never مقدار ناممکن یا تابع بدون بازگشت عادی را نشان می‌دهد و برای exhaustive check مفید است. JSON، پیام صف و خطای catch را با بررسی واقعی بشناسید؛ type assertion دادهٔ ورودی را معتبر نمی‌کند.
+
+### ۱۰۶. generic چه مسئله‌ای را حل می‌کند و چه چیزی را حل نمی‌کند؟
+**پاسخ مورد انتظار:** generic رابطهٔ نوع ورودی/خروجی و قید API قابل‌استفادهٔ مجدد را حفظ می‌کند. `Promise<T>` قرارداد static می‌دهد، ولی T در runtime وجود ندارد؛ بنابراین JSON را اعتبارسنجی نمی‌کند و خودکار metadata دکوراتور نمی‌سازد. برای رفتار زمان اجرا، constructor یا schema مشخص بدهید.
+
+### ۱۰۷. utility typeها با mapped DTOهای Nest چه تفاوتی دارند؟
+**پاسخ مورد انتظار:** `Partial`، `Pick`، `Omit` و `Readonly` فقط static هستند. `PartialType` و مشابه‌های Nest کلاس می‌سازند و metadata مرتبط را می‌توانند منتقل کنند؛ بستهٔ مناسب validation، Swagger یا GraphQL را انتخاب کنید. Partial و Readonly سطحی‌اند؛ optional بودن فیلد PATCH، اعتبارسنجی و کنترل مجوز را حذف نمی‌کند.
+
+### ۱۰۸. union، intersection و discriminated union چیست؟
+**پاسخ مورد انتظار:** `A | B` یکی از حالت‌ها و `A & B` رعایت هر دو قرارداد است. فیلدی literal مثل kind امکان narrowing امن در switch می‌دهد؛ شاخهٔ never اضافه‌شدن حالت جدید را آشکار می‌کند. این ایمنی static جای بررسی discriminator پیام واقعی ورودی را نمی‌گیرد.
+
+### ۱۰۹. decorator و metadata چه نقشی در Nest دارند؟
+**پاسخ مورد انتظار:** دکوراتورها metadata مسیر و provider را ثبت می‌کنند و Nest آن را می‌خواند. تنظیم فعلی پروژه از `experimentalDecorators`، `emitDecoratorMetadata` و `reflect-metadata` استفاده می‌کند. interface/generic سازندهٔ runtime ندارند و `import type` نیز حذف می‌شود. decorator استاندارد جدید JavaScript با این مدل legacy جایگزین مستقیم نیست.
+
+### ۱۱۰. چرا transpile شدن TypeScript به معنی صحت آن نیست؟
+**پاسخ مورد انتظار:** transpiler می‌تواند فقط نوع‌ها را حذف کند؛ `ts-node --transpile-only` مثال‌های قبلی چنین است. جداگانه `tsc --noEmit` با تنظیم strict اجرا کنید. `as`، non-null assertion و definite-assignment assertion نگرانی کامپایلر را خاموش می‌کنند و هیچ validation زمان اجرایی انجام نمی‌دهند.
+
+### ۱۱۱. آیا `paths`، `target` و `module` رفتار runtime را تضمین می‌کنند؟
+**پاسخ مورد انتظار:** target نحو خروجی و module شکل ماژول خروجی را تعیین می‌کند. paths برای حل alias در TypeScript است و عموماً import خروجی را بازنویسی نمی‌کند؛ runtime یا bundler هم تنظیم می‌خواهد. package type، resolution و پسوند خروجی را هم‌راستا کنید. lib و `@types` برای API ناموجود polyfill نمی‌سازند.
+
+---
+
+## ۱۹. لغو عملیات، زمان‌بندی و محدودیت هم‌زمانی
+
+### ۱۱۲. آیا `await` کل Node را مسدود یا Promise یک thread ایجاد می‌کند؟
+**پاسخ مورد انتظار:** await همان تابع async را معلق می‌کند؛ callbackهای دیگر فرصت اجرا دارند. محاسبهٔ CPU قبل یا بعد از آن همچنان thread را مسدود می‌کند. executor سازندهٔ Promise همزمان اجرا می‌شود. Promise نمایش نتیجهٔ آینده است؛ API زیربنایی مشخص می‌کند کار روی سیستم‌عامل، pool یا thread فعلی انجام شود.
+
+### ۱۱۳. چرا `forEach(async ...)` اغلب اشتباه است؟
+**پاسخ مورد انتظار:** forEach نتیجهٔ callback را نادیده می‌گیرد، منتظر Promise نمی‌ماند و خطاها را تجمیع نمی‌کند. برای اجرای ترتیبی `for...of`، برای مجموعهٔ کوچک مستقل map و Promise.all و برای ورودی بزرگ worker pool به‌کار ببرید. خطا را در لایه‌ای بگیرید که مسئول کل عملیات است.
+
+### ۱۱۴. چرا `Promise.race` به‌تنهایی timeout یا cancellation واقعی نیست؟
+**پاسخ مورد انتظار:** فقط wrapper زودتر settle می‌شود؛ عملیات بازنده ادامه دارد. از AbortController/AbortSignal در API پشتیبان لغو استفاده و timer/listener را پاک کنید. لغو همکاری‌محور است و اثر جانبی ثبت‌شده در سرویس دور را برنمی‌گرداند؛ retry ممکن است به idempotency key نیاز داشته باشد.
+
+### ۱۱۵. چگونه از ۱۰هزار درخواست فقط ده مورد را هم‌زمان اجرا می‌کنید؟
+**پاسخ مورد انتظار:** worker pool ثابت یا semaphore با حداکثر ده عملیات فعال و صف ورودی محدود بسازید. ترتیب نتیجه، سیاست خطا و لغو را مشخص و permit را در finally آزاد کنید. concurrency تعداد کار فعال را محدود می‌کند؛ rate limit تعداد شروع در بازهٔ زمان را. Promise.all روی همهٔ ورودی‌ها هیچ‌کدام را تضمین نمی‌کند.
+
+### ۱۱۶. retry امن را چگونه طراحی می‌کنید؟
+**پاسخ مورد انتظار:** خطای گذرا را با سقف تلاش، deadline کلی و exponential backoff همراه jitter تکرار کنید؛ در صورت کاربرد Retry-After را رعایت کنید. validation error یا اثر جانبی غیر idempotent را کورکورانه تکرار نکنید. retry در همهٔ لایه‌ها بار را چندبرابر می‌کند؛ مالک بودجهٔ retry مشخص باشد.
+
+### ۱۱۷. آیا برنامهٔ تک‌نخی Node می‌تواند race condition داشته باشد؟
+**پاسخ مورد انتظار:** بله؛ دو handler موجودی یکسان را می‌خوانند، await می‌کنند و تغییر یکدیگر را از بین می‌برند. mutex درون process فقط همان process را هماهنگ می‌کند. برای replicaها به atomic update دیتابیس، unique constraint، version check یا transaction با isolation/locking مناسب نیاز دارید؛ اجرای ترتیبی JavaScript عملیات چندمرحله‌ای I/O را atomic نمی‌کند.
+
+### ۱۱۸. error-first callback و `util.promisify` چیست؟
+**پاسخ مورد انتظار:** callback متعارف `(error, result)` است و باید یک بار فراخوانی شود. promisify چنین APIهایی را تطبیق می‌دهد؛ برای متد، receiver را حفظ کنید و امضاهای غیرمتعارف را صریح مدیریت کنید. try/catch همزمانِ اطراف زمان‌بندی callback، exception اجرای بعدی داخل callback را نمی‌گیرد.
+
+### ۱۱۹. چه زمانی باید CPU کار را واگذار کند و چه چیزی process را زنده نگه می‌دارد؟
+**پاسخ مورد انتظار:** کار متوسط را قطعه‌بندی و با setImmediate فرصت I/O بدهید؛ `await Promise.resolve()` فقط به microtask می‌رود و ممکن است همچنان I/O را گرسنه کند. برای CPU مداوم، worker pool مناسب است. handle فعالِ referenced مانع خروج است؛ Promise معلق به‌تنهایی نیست. `unref()` timer را لغو نمی‌کند، فقط اجازهٔ خروج می‌دهد.
+
+تمرین منتخب: [مثال 017](017_async_control/index.js). مرجع API: [Node globals و لغو عملیات](https://nodejs.org/api/globals.html).
+
+---
+
+## ۲۰. جزئیات runtime، ماژول، stream و عیب‌یابی
+
+### ۱۲۰. context درخواست چگونه در مسیر async حفظ می‌شود؟
+**پاسخ مورد انتظار:** `AsyncLocalStorage.run` برای کار async ایجادشده در callback یک store برقرار می‌کند؛ مثلاً correlation ID بدون پاس‌دادن در همهٔ توابع. متغیر سراسری current-user بین درخواست‌ها مخلوط می‌شود. callback سفارشی ممکن است context را از دست بدهد و AsyncResource بخواهد؛ عبور از worker/process به انتقال صریح نیاز دارد.
+
+### ۱۲۱. رشد حافظه را چگونه بررسی می‌کنید؟
+**پاسخ مورد انتظار:** RSS، heapUsed/heapTotal، external و arrayBuffers را در بار و چرخهٔ GC قابل‌مقایسه رصد کنید. رشد RSS به‌تنهایی اثبات نشتی heap جاوااسکریپت نیست. retaining path و allocation profile را مقایسه و cache/listenerهای نگه‌داشته‌شده را محدود کنید. heap snapshot می‌تواند اجرا را متوقف کند و دادهٔ حساس داشته باشد.
+
+### ۱۲۲. معنای `write(false)`، `drain`، `highWaterMark` و pipeline چیست؟
+**پاسخ مورد انتظار:** false یعنی chunk پذیرفته شده ولی تا drain دوباره ننویسید. highWaterMark آستانهٔ buffering است، نه سقف قطعی حافظه؛ در object mode تعداد شیء را می‌شمارد. pipeline فشار برگشتی، شکست و teardown را هماهنگ می‌کند؛ reject آن و قطع انتقال HTTP را حتماً مدیریت کنید.
+
+### ۱۲۳. چرا تبدیل جداگانهٔ Bufferهای یک stream می‌تواند UTF-8 را خراب کند؟
+**پاسخ مورد انتظار:** بایت‌های یک کاراکتر ممکن است در دو chunk باشند؛ decode مستقل کاراکتر جایگزین می‌سازد. از StringDecoder یا TextDecoder در حالت streaming استفاده کنید. Buffer.subarray حافظهٔ مشترک دارد؛ Buffer.from(buffer) کپی بایت می‌سازد. length رشته واحد UTF-16 است و Buffer.byteLength بایت encoding را می‌شمارد.
+
+### ۱۲۴. آیا EventEmitter منتظر listener ناهمزمان می‌ماند؟ رویداد error چه می‌شود؟
+**پاسخ مورد انتظار:** emit عادی listenerها را همزمان و به ترتیب ثبت صدا می‌زند و Promise برگشتی را await نمی‌کند. error بدون handler پرتاب می‌شود. شکست listener async را صریح بگیرید یا captureRejections مناسب تنظیم کنید. هشدار تعداد listener سقف سخت نیست؛ بالابردن عدد، نشتی را درمان نمی‌کند.
+
+### ۱۲۵. تفاوت spawn، exec، execFile، انتقال دادهٔ worker و اندازهٔ pool چیست؟
+**پاسخ مورد انتظار:** spawn خروجی را stream می‌کند؛ exec از shell می‌گذرد و خروجی را buffer می‌کند؛ execFile پیش‌فرض executable را مستقیم اجرا می‌کند. ورودی را در دستور shell interpolate نکنید. worker با clone، انتقال مالکیت buffer یا SharedArrayBuffer و Atomics ارتباط دارد. pool را با محدودیت واقعی CPU/حافظه و فشار صف تنظیم کنید.
+
+### ۱۲۶. چه دام‌هایی در CJS/ESM و نصب پکیج وجود دارد؟
+**پاسخ مورد انتظار:** ESM resolution مبتنی بر URL و پسوند صریح مسیر نسبی دارد و cache آن با CJS متفاوت است. در صورت تناسب import() استفاده کنید؛ پشتیبانی require(ESM) وابسته به نسخه است و graph نیازمند top-level await را همزمان بار نمی‌کند. exports پکیج را رعایت کنید. npm ci سازگاری lockfile را الزام می‌کند، اما install scriptها مگر با غیرفعال‌سازی اجرا می‌شوند.
+
+### ۱۲۷. ترتیب timer، DNS و کلاینت HTTP چه اثری بر latency دارند؟
+**پاسخ مورد انتظار:** ترتیب timer/immediate در سطح بالای برنامه تضمین عمومی ندارد؛ داخل callback I/O معمولاً immediate قبل از timer تازه اجرا می‌شود. libuv 1.45 رفتار timerها را تغییر داد. dns.lookup برخلاف dns.resolve برای pool رقابت می‌کند. reuse اتصال و deadline را تنظیم کنید؛ fetch داخلی از Undici استفاده می‌کند، نه http.globalAgent، و status خطای HTTP باعث reject آن نمی‌شود.
+
+تمرین منتخب: [مثال 018](018_context_streams/index.js). منابع: [Async context](https://nodejs.org/api/async_context.html)، [Streams](https://nodejs.org/api/stream.html)، [Event Loop](https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick).
+
+---
+
+## ۲۱. امنیت runtime و API
+
+### ۱۲۸. چگونه command injection و دسترسی ناامن به فایل را می‌گیرید؟
+**پاسخ مورد انتظار:** executable ثابت و آرایهٔ argument بدون shell را ترجیح دهید و عملیات مجاز را محدود کنید. مسیر ورودی را نسبت به root مجاز resolve و مرز واقعی مسیر، از جمله فرار با symlink در صورت کاربرد، بررسی کنید. اتصال رشته، path.join یا مقایسهٔ سادهٔ prefix به‌تنهایی اثبات نمی‌کند فایل داخل محدوده است.
+
+### ۱۲۹. SSRF در کلاینت HTTP نود چیست؟
+**پاسخ مورد انتظار:** URL دریافتی از کاربر می‌تواند سرویس داخلی یا metadata زیرساخت را هدف بگیرد. scheme و مقصد، DNS، redirect، نمایش‌های مختلف IP و rebinding را در نظر بگیرید و خروجی شبکه را محدود کنید. برای حجم و زمان پاسخ سقف بگذارید؛ بررسی رشتهٔ URL اولیه، اتصال‌ها و redirectهای بعدی را امن نمی‌کند.
+
+### ۱۳۰. جز حلقهٔ CPU چه چیزی Node را مسدود می‌کند؟
+**پاسخ مورد انتظار:** regex با backtracking شدید، JSON.parse/stringify بزرگ، crypto/compression همزمان، validation ورودی حجیم و logging سنگین. اندازهٔ بایت، عمق، batch و زمان اجرا را محدود و قبل از انتقال کار پروفایل کنید. قراردادن محاسبه در async function آن را از thread اصلی خارج نمی‌کند.
+
+### ۱۳۱. prototype pollution با mass assignment چه تفاوتی دارد؟
+**پاسخ مورد انتظار:** merge ناامن کلیدهای نامطمئن می‌تواند prototype و رفتار inherited را تغییر دهد. mass assignment اجازهٔ تغییر فیلد ممنوع مثل isAdmin را می‌دهد. ساختار دادهٔ امن، mapping صریح، allowlist ورودی و مجوز در سطح شیء لازم است. معتبر بودن نوع یک فیلد، اجازهٔ تغییر آن فیلد نیست.
+
+### ۱۳۲. CORS، CSRF و security header هر کدام چه مسئله‌ای حل می‌کنند؟
+**پاسخ مورد انتظار:** CORS دسترسی مرورگر به پاسخ cross-origin را کنترل می‌کند و احراز هویت یا firewall عمومی نیست. تغییر وضعیت با cookie ممکن است علاوه بر SameSite به CSRF token و بررسی origin نیاز داشته باشد. header امنیتی سطح حملهٔ مرورگر را کم می‌کند، نه مشکل authorization را. CORS دارای credentials به سیاست origin صریح و مورداعتماد نیاز دارد.
+
+### ۱۳۳. password، token و secret را چگونه نگه می‌دارید؟
+**پاسخ مورد انتظار:** password به الگوریتم مخصوص مثل Argon2id با salt و هزینهٔ تنظیم‌شده نیاز دارد؛ hash سریع معمولی مناسب نیست. token را با random رمزنگارانه بسازید، credential opaque ذخیره‌شده را در صورت تناسب hash کنید، کلید بچرخانید و لاگ را redact کنید. امضای JWT تمامیت می‌دهد، نه رمزگذاری؛ claim خواندنی جای secret نیست.
+
+### ۱۳۴. فایل upload را چگونه امن اعتبارسنجی می‌کنید؟
+**پاسخ مورد انتظار:** حجم، تعداد، زمان پردازش و رشد پس از decompression را محدود کنید؛ به نام/MIME اکتفا نکنید و محتوا را بررسی کنید. کلید ذخیره‌سازی تولید کنید، اجرای فایل را منع و دانلود را authorize کنید؛ در صورت نیاز اسکن انجام دهید. فایل بزرگ را stream کنید. یکپارچه‌سازی Multer مبتنی بر Express در Nest خودکار با Fastify سازگار نیست.
+
+### ۱۳۵. سخت‌سازی وابستگی و production شامل چیست؟
+**پاسخ مورد انتظار:** lockfile بازتولیدپذیر، بررسی upgrade/install script، حداقل دسترسی، runtime پشتیبانی‌شده و وصله‌شده و محدودکردن diagnostics. گزارش audit به تحلیل قابلیت سوءاستفاده نیاز دارد؛ audit پاک اثبات امنیت نیست. inspector را عمومی نکنید. محدودیت body، header و timeout را در proxy و برنامه هماهنگ کنید.
+
+مرجع: [راهنمای امنیت Node](https://nodejs.org/learn/getting-started/security-best-practices). مطالعهٔ عمیق‌تر: فصل‌های 014، 034 و 054 تا 056 مخزن.
+
+---
+
+# بخش چهارم: NestJS در production و اتصال به سرویس‌ها
+
+## ۲۲. DTO، validation، serialization و HTTP
+
+### ۱۳۶. چرا interface یک DTO، body درخواست را اعتبارسنجی نمی‌کند؟
+**پاسخ مورد انتظار:** interface حذف می‌شود. کلاس DTO یا schema زمان اجرا و pipe فعال لازم دارید؛ class-validator به دکوراتور validation نیاز دارد. ApiProperty توصیف OpenAPI است، نه قاعدهٔ اعتبارسنجی. annotation نوع خروجی هم به‌خودی‌خود پاسخ واقعی را در runtime پاکسازی یا validate نمی‌کند.
+
+### ۱۳۷. شیء و آرایهٔ تو‌در‌تو چگونه validate می‌شوند؟
+**پاسخ مورد انتظار:** در مدل کلاس‌محور از ValidateNested و `@Type(() => ChildDto)` استفاده کنید؛ آرایه معمولاً each: true و قید نوع/اندازه هم می‌خواهد. آرایهٔ primitive را صریح بررسی کنید؛ ParseArrayPipe یا DTO پوشاننده مناسب است. `ChildDto[]` در TypeScript metadata کافی برای نوع آیتم runtime نمی‌دهد.
+
+### ۱۳۸. تبدیل خودکار ورودی چه دام‌هایی دارد؟
+**پاسخ مورد انتظار:** query/path رشته‌اند؛ transform/validator آگاهانهٔ DTO یا parsing صریح و بررسی enum/بازه لازم است. Boolean عمومی رشتهٔ false را true می‌کند. ValidationPipe سراسریِ transforming می‌تواند primitive تایپ‌شده را پیش از pipe پارامتر تبدیل کند؛ آن‌وقت حتی ParseBoolPipe به‌جای رشتهٔ نامعتبر boolean می‌بیند. مثال 019 در این مرز عمداً metadata نوع unknown دارد تا pipe سخت‌گیر مقدار اصلی را ببیند.
+
+### ۱۳۹. در PATCH فیلد غایب چه فرقی با null دارد؟
+**پاسخ مورد انتظار:** نبود فیلد معمولاً یعنی تغییر نده؛ null در صورت مجازبودن یعنی پاک‌کردن مقدار. IsOptional معمولاً validation را هم برای undefined و هم null رد می‌کند؛ PartialType ممکن است null ناخواسته بپذیرد. قرارداد را صریح کنید، فیلد محافظت‌شده را رد کنید و کل DTO را مستقیم به ORM ندهید.
+
+### ۱۴۰. چگونه password و فیلدهای داخلی را از خروجی حذف می‌کنید؟
+**پاسخ مورد انتظار:** output DTO صریح بسازید یا ClassSerializerInterceptor را با instance واقعی و قواعد exclude درست به‌کار ببرید. plain object دلخواه الزاماً metadata کلاس را اعمال نمی‌کند. entity دیتابیس قرارداد عمومی API نیست. نبود فیلد حساس را در پاسخ، از جمله relation تو‌در‌تو، بررسی کنید.
+
+### ۱۴۱. چه defaultهای HTTP و routing در Nest مهم‌اند؟
+**پاسخ مورد انتظار:** POST معمولاً 201 و اکثر handlerهای دیگر 200 می‌دهند؛ پاسخ 204 body ندارد. HttpCode، header، redirect، StreamableFile، global prefix و versioning قرارداد را تغییر می‌دهند. تقدم route ثابت و پارامتری را بررسی کنید. Express و Fastify متفاوت‌اند؛ فرض request/response وابسته به adapter را وارد service نکنید.
+
+### ۱۴۲. امضای webhook و پاسخ streaming چگونه مدیریت می‌شوند؟
+**پاسخ مورد انتظار:** امضا را روی بایت خام دقیق پیش از normalization بررسی و timestamp/replay را کنترل کنید؛ پس از پذیرش پایدار پاسخ دهید. raw-body را همراه سقف body در Nest تنظیم کنید. برای stream/SSE قطع اتصال، teardown، buffering محدود و timeout/proxy را مدیریت کنید. پاسخ نیمه‌ارسال‌شده را نمی‌توان به JSON خطای تازه تبدیل کرد.
+
+### ۱۴۳. هنگام مهاجرت از NestJS 10 به 11 چه چیزهایی تغییر می‌کند؟
+**پاسخ مورد انتظار:** migration guide و peer dependency سازگار را بررسی کنید. Nest 11 پیش‌فرض Express 5 دارد؛ wildcard route و query parsing تغییر می‌کنند و Node 20+ لازم است. تغییرات cache integration هم مهم است. مثال‌های این فصل روی Nest 10 می‌مانند؛ در مهاجرت واقعی route، validation، خطا و serialization را آزمایش کنید.
+
+تمرین منتخب: [مثال 019](019_nestjs_contracts/main.ts). منابع: [Validation](https://docs.nestjs.com/techniques/validation)، [Migration guide](https://docs.nestjs.com/migration-guide).
+
+---
+
+## ۲۳. عمق DI و چرخهٔ درخواست
+
+### ۱۴۴. خطای «Nest can't resolve dependencies» را چگونه بررسی می‌کنید؟
+**پاسخ مورد انتظار:** index/token آرگومان مشکل‌دار، ثبت provider، exports/imports، type زمان اجرا، نسخهٔ تکراری package و وابستگی حلقوی را بررسی کنید. ثبت جداگانهٔ یک کلاس در چند feature module می‌تواند instance جدا بسازد. به‌جای ثبت تکراری برای خاموش‌کردن خطا، ماژول مالک provider را import کنید.
+
+### ۱۴۵. `useExisting` با `useClass` و factory ناهمزمان چه تفاوتی دارد؟
+**پاسخ مورد انتظار:** useExisting نام مستعار همان instance موجود است؛ useClass برای آن registration provider می‌سازد و ممکن است instance جدا باشد. useFactory می‌تواند dependency بگیرد و initialization را await کند. token مصرفی را export کنید و نبود زیرساخت/تنظیم الزامی را با خطای راه‌اندازی معنادار گزارش دهید.
+
+### ۱۴۶. `ModuleRef.get`، `resolve` و ContextIdFactory چه هستند؟
+**پاسخ مورد انتظار:** get برای provider ثابت و resolve برای scoped provider در context تزریق است. برای اشتراک instance در scope موردنظر، context ID مناسب را استفاده کنید؛ context مستقل instance مستقل می‌دهد. در context دستی برای تزریق REQUEST، request را ثبت کنید. service locator فراگیر را جایگزین constructor dependency روشن نکنید.
+
+### ۱۴۷. چرا از `APP_GUARD`، `APP_PIPE`، `APP_INTERCEPTOR` و `APP_FILTER` استفاده می‌کنیم؟
+**پاسخ مورد انتظار:** enhancer سراسری ثبت‌شده در ماژول از DI استفاده می‌کند. new کردن دستی در main.ts dependencyها را خودکار resolve نمی‌کند. false در guard معمولاً 403 می‌دهد؛ برای نبود authentication استثنای متناسب 401 بدهید. metadata مسیر عمومی و ترتیب enhancerها را آگاهانه طراحی کنید.
+
+### ۱۴۸. ترتیب دقیق guard، pipe، interceptor و filter چیست؟
+**پاسخ مورد انتظار:** guard و interceptor ورودی عموماً global → controller → route هستند؛ مسیر پاسخ interceptor برعکس باز می‌شود. pipeهای پارامتر هم جزئیات ترتیب خود را دارند. filter از route به global resolve می‌شود و زنجیرهٔ معمول rethrow بین filterها نیست. interceptor خطای guard زودتر از خودش را نمی‌گیرد.
+
+### ۱۴۹. عمر REQUEST و TRANSIENT در عمل چه تفاوتی دارد؟
+**پاسخ مورد انتظار:** REQUEST به context درخواست وابسته است و به مصرف‌کننده سرایت می‌کند؛ TRANSIENT به مصرف‌کنندگان مختلف instance جدا می‌دهد بدون آنکه scope خودشان عوض شود. transient تزریق‌شده به singleton در هر فراخوانی متد دوباره ساخته نمی‌شود. gateway و زیرساخت دوره‌ای باید با الزامات lifecycle خود singleton بمانند.
+
+### ۱۵۰. metadata در Reflector و global module چه دام‌هایی دارند؟
+**پاسخ مورد انتظار:** getAllAndOverride تقدم را اعمال می‌کند؛ getAllAndMerge metadata را ترکیب می‌کند. بر اساس معنای مجوز انتخاب کنید. global module نیاز به import تکراری را کم می‌کند، ولی باید ثبت و providerهایش export شوند. وابستگی پنهان سراسری و shared module حجیم، مرزبندی و تست مستقل را ضعیف می‌کند.
+
+### ۱۵۱. standalone app، cleanup و وابستگی حلقوی چگونه مدیریت می‌شوند؟
+**پاسخ مورد انتظار:** createApplicationContext بدون HTTP، DI را راه می‌اندازد و باید بسته شود. cleanup را idempotent و دارای deadline طراحی کنید؛ signal به shutdown hooks نیاز دارد. forwardRef شاید چرخهٔ resolution فریم‌ورک را رفع کند، ولی coupling معماری یا هر چرخهٔ initialization زبان را اصلاح نمی‌کند. قرارداد مشترک یا سرویس orchestration را ترجیح دهید.
+
+منابع: [Injection scopes](https://docs.nestjs.com/fundamentals/injection-scopes)، [Request lifecycle](https://docs.nestjs.com/faq/request-lifecycle).
+
+---
+
+## ۲۴. احراز هویت و کنترل دسترسی
+
+### ۱۵۲. authentication و authorization و statusهای 401/403 چه تفاوتی دارند؟
+**پاسخ مورد انتظار:** authentication هویت را اثبات می‌کند و authorization اجازهٔ عملیات روی منبع را. credential مفقود/نامعتبر معمولاً 401 و کاربر شناخته‌شدهٔ فاقد مجوز معمولاً 403 می‌گیرد. JWT معتبر مالکیت رکورد را ثابت نمی‌کند. علاوه بر سیاست route، دسترسی منبع را در service/repository کنترل کنید.
+
+### ۱۵۳. strategy و guard در Passport چگونه همکاری می‌کنند؟
+**پاسخ مورد انتظار:** strategy credential را استخراج/اعتبارسنجی و principal را برمی‌گرداند؛ guard مربوط Passport آن را اجرا و user را به request متصل می‌کند. guard/policy بعدی از همین هویت معتبر استفاده می‌کند. بررسی password و صدور token در service باشد؛ user ID یا role در header دلخواه کاربر قابل‌اعتماد نیست.
+
+### ۱۵۴. روی JWT چه چیزهایی باید بررسی شود؟
+**پاسخ مورد انتظار:** امضا با کلید معتبر و allowlist الگوریتم، issuer، audience، expiry و در صورت کاربرد not-before. clock tolerance و rotation کلید را طراحی کنید. decode کردن verify نیست. اعتبار امضا خودکار تعلیق حساب، ابطال token یا تغییر permission را منعکس نمی‌کند.
+
+### ۱۵۵. refresh token rotation و logout چگونه کار می‌کنند؟
+**پاسخ مورد انتظار:** access token کوتاه‌عمر و refresh credential محافظت‌شده داشته باشید؛ hash/reference را ذخیره و refresh را atomic بچرخانید. reuse را مطابق سیاست خانوادهٔ session تشخیص و در صورت لزوم sessionهای مرتبط را revoke کنید. logout وضعیت refresh سمت سرور را باطل می‌کند؛ access token قبلی تا expiry یا سازوکار ابطال صریح معتبر می‌ماند.
+
+### ۱۵۶. session با JWT و cookie با browser storage چه تفاوتی دارد؟
+**پاسخ مورد انتظار:** session ابطال متمرکز دارد و بین replicaها shared state می‌خواهد؛ JWT lookup را کم می‌کند ولی ابطال فوری دشوارتر است. cookie با HttpOnly/Secure/SameSite دسترسی script را کم می‌کند، اما ملاحظات CSRF دارد. storage در دسترس script آلوده است. بر اساس تهدید، کلاینت و نیاز ابطال تصمیم بگیرید.
+
+### ۱۵۷. RBAC، ABAC و جداسازی tenant چیست؟
+**پاسخ مورد انتظار:** RBAC نقش را به permission نگاشت می‌کند؛ ABAC مالکیت، tenant و وضعیت منبع را هم می‌سنجد. همهٔ دسترسی‌های داده، job پس‌زمینه و cache key را با context معتبر tenant محدود کنید. تست cross-tenant ضروری است. guard نقش سراسری به‌تنهایی جلوی دسترسی مستقیم ناامن به شناسهٔ منبع را نمی‌گیرد.
+
+### ۱۵۸. مسیر public و throttling را چگونه طراحی می‌کنید؟
+**پاسخ مورد انتظار:** guard سراسری می‌تواند metadata صریح public را رعایت کند؛ endpoint عمومی همچنان validation و کنترل سوءاستفاده می‌خواهد. هویت limiter پایدار و trusted proxy درست تنظیم شود. replicaهای متعدد به limiter مشترک یا هماهنگی upstream نیاز دارند. اعتماد به X-Forwarded-For دلخواه می‌تواند محدودیت IP را دور بزند.
+
+### ۱۵۹. کدام حالت‌های authentication باید بررسی خودکار شوند؟
+**پاسخ مورد انتظار:** token مفقود، خراب، منقضی یا با issuer/audience اشتباه؛ rotation، مالکیت/tenant ممنوع، refresh reuse، حساب تعلیق/ابطال‌شده و نشت credential در خروجی. مسیر مجاز و غیرمجاز را با guard واقعی بررسی کنید. mock کردن همهٔ guardها رفتار controller را ثابت می‌کند، نه درستی authentication را.
+
+مرجع: [Authentication در Nest](https://docs.nestjs.com/security/authentication). مطالعهٔ مکمل: فصل‌های 007، 042 و 076.
+
+---
+
+## ۲۵. دیتابیس، ORM و تراکنش
+
+### ۱۶۰. TypeORM، Prisma یا Mongoose چگونه وارد معماری Nest می‌شوند؟
+**پاسخ مورد انتظار:** persistence را پشت provider تزریقی با lifecycle مشخص client/pool مشترک نگه دارید. TypeORM از repository/entity، Prisma از client تولیدشده و Mongoose از model/document استفاده می‌کند؛ semantics تراکنش و mapping آن‌ها یکسان نیست. controller را از جزئیات ذخیره‌سازی جدا کنید و برای هر درخواست اتصال/client تازه نسازید.
+
+### ۱۶۱. با وجود ORM چگونه جلوی SQL injection را می‌گیرید؟
+**پاسخ مورد انتظار:** مقدارها، حتی در raw query، parameterize شوند. identifier، جهت sort و تکهٔ SQL پویا معمولاً allowlist صریح می‌خواهند چون value قابل bind نیستند. ORM، raw SQL حاصل از interpolation را خودکار امن نمی‌کند. در Mongo هم operator و filter کنترل‌شده لازم است؛ query object دلخواه کاربر را مستقیم عبور ندهید.
+
+### ۱۶۲. علت N+1 و تمام‌شدن connection pool چیست؟
+**پاسخ مورد انتظار:** واکشی relation برای هر ردیف تعداد roundtrip را چندبرابر می‌کند؛ join، projection، batching یا loader به‌ازای request کمک می‌کند. transaction طولانی، connection رهاشده یا query موازی نامحدود هم pool را پر می‌کند. مجموع pool همهٔ replicaها باید با بودجهٔ دیتابیس سازگار باشد؛ زمان query و انتظار pool را جدا اندازه بگیرید.
+
+### ۱۶۳. تراکنش را چگونه درست پیاده می‌کنید؟
+**پاسخ مورد انتظار:** همهٔ statementها از manager/client مخصوص همان transaction اجرا شوند؛ موفقیت commit و شکست rollback شود. decorator در Nest به‌خودی‌خود تراکنش دیتابیس ایجاد نمی‌کند. تراکنش را کوتاه و دور از remote call نگه دارید. در TypeORM استفاده از repository سراسری داخل transaction ممکن است از محدودهٔ آن خارج شود.
+
+### ۱۶۴. tradeoffهای isolation و locking چیست؟
+**پاسخ مورد انتظار:** isolation پیش‌فرض بسته به دیتابیس بعضی anomalyها را اجازه می‌دهد. optimistic version check تداخل را کشف و pessimistic lock دسترسی را هماهنگ می‌کند، ولی انتظار/deadlock می‌آورد. Serializable ممکن است retry بخواهد. atomic conditional update همراه constraint اغلب invariant ساده را روشن‌تر از قفل گستردهٔ برنامه حل می‌کند.
+
+### ۱۶۵. چرا pre-check برای uniqueness و idempotency کافی نیست؟
+**پاسخ مورد انتظار:** دو درخواست ممکن است همزمان «وجود ندارد» ببینند و insert کنند. uniqueness را در دیتابیس بگذارید، conflict را مدیریت و مالکیت/نتیجهٔ idempotency را تا حد ممکن همراه اثر، atomic ثبت کنید. کلید یکسان با payload متفاوت باید رد شود. dedup در حافظه با restart یا replica کافی نیست.
+
+### ۱۶۶. pagination، index و migration چه اثری روی API دارند؟
+**پاسخ مورد انتظار:** ترتیب قطعی با tiebreaker یکتا لازم است. offset ساده است ولی در دادهٔ بزرگ گران و هنگام write متغیر می‌شود؛ cursor به ترتیب پایدار، index و semantics روشن نیاز دارد. index را طبق الگوی واقعی query بسازید. تغییر schema در production migration بازبینی‌شده، سازگاری مرحله‌ای و برنامهٔ بازگشت می‌خواهد، نه synchronize خودکار.
+
+### ۱۶۷. مرز امن atomicity دیتابیس کجاست؟
+**پاسخ مورد انتظار:** transaction محلی، write دیتابیس و broker/email/payment مستقل را همزمان atomic نمی‌کند؛ outbox یا workflow با idempotency و compensation لازم است. تراکنش چندسندی MongoDB الزامات deployment دارد و جای طراحی schema را نمی‌گیرد. پول را با decimal دقیق یا واحد خرد و currency صریح مدل کنید، نه محاسبهٔ floating-point دودویی.
+
+مطالعهٔ مکمل: فصل‌های 008، 058–059، 066، 068 و 073. برای syntax تراکنش به نسخهٔ نصب‌شدهٔ ORM رجوع کنید؛ این سؤال‌ها معماری‌اند و API همهٔ نسخه‌ها یکسان نیست.
+
+---
+
+## ۲۶. cache، Redis، صف و زمان‌بندی
+
+### ۱۶۸. cache-aside چگونه کار می‌کند و چه سازگاری می‌دهد؟
+**پاسخ مورد انتظار:** cache را بخوانید؛ در miss داده را بگیرید و با TTL ذخیره کنید؛ پس از commit تغییر، بر اساس نیاز سازگاری invalidate/update کنید. race ممکن است دادهٔ کهنه را دوباره پر کند؛ تضمین قوی‌تر versioning یا coordination می‌خواهد. برای قطعی cache سیاست افت سرویس مشخص باشد؛ cache خودکار منبع حقیقت پایدار نیست.
+
+### ۱۶۹. cache key چه چیزهایی باید داشته باشد؟
+**پاسخ مورد انتظار:** هر بُعد مؤثر بر نتیجه: tenant، scope مجوز/user، زبان، نسخه، filter و pagination در صورت کاربرد. secret خام را در key نگذارید. cache مشترکِ صرفاً مبتنی بر route برای پاسخ شخصی می‌تواند داده لو بدهد. رفتار CacheInterceptor و مسیرهای مستثنا را قبل از فعال‌سازی سراسری بررسی کنید.
+
+### ۱۷۰. stampede، penetration، TTL jitter و دام cache-manager چیست؟
+**پاسخ مورد انتظار:** stampede بارگیری همزمان پس از expiry است؛ single-flight، jitter یا stale-while-revalidate کمک می‌کند. miss تکراری می‌تواند negative cache محدود بخواهد. حافظه و cardinality را محدود کنید. واحد TTL، مقدار miss و اتصال Redis/Keyv بین نسل packageها فرق می‌کند؛ نمونهٔ نسخهٔ دیگر Nest را بدون بررسی کپی نکنید.
+
+### ۱۷۱. Bull و BullMQ چه تفاوتی دارند و چرا صف لازم است؟
+**پاسخ مورد انتظار:** دو کتابخانهٔ جدا با Redis و integrationهای متفاوت `@nestjs/bull` و `@nestjs/bullmq` و API پردازندهٔ متفاوت‌اند. صف latency درخواست را جدا، concurrency را محدود و کار را retry می‌کند. پاسخ 202 پذیرش است، نه موفقیت نهایی؛ اگر کلاینت نتیجه می‌خواهد، وضعیت پایدار و قرارداد job/result بدهید.
+
+### ۱۷۲. چرا processor صف باید idempotent باشد؟
+**پاسخ مورد انتظار:** worker ممکن است پس از اثر جانبی و پیش از ack بمیرد؛ redelivery کار را تکرار می‌کند. شناسهٔ پایدار کسب‌وکار، constraint و سابقهٔ پایدار dedup/result لازم است. سقف retry، backoff، dead-letter و هشدار poison message جلوی حلقهٔ بی‌پایان را می‌گیرد. dedup صف تضمین exactly-once برای اثر خارجی نیست.
+
+### ۱۷۳. throughput صف و ترتیب را چگونه تنظیم می‌کنید؟
+**پاسخ مورد انتظار:** concurrency worker، rate سراسری، batch size و ترتیب partition/key را جدا بسنجید. افزایش concurrency ممکن است دیتابیس یا vendor را اشباع کند. processor CPU-heavy را از Event Loop HTTP جدا کنید. سن قدیمی‌ترین job، عمق، retry و زمان اجرا را رصد و در ورودی بیش از ظرفیت، backpressure یا رد پذیرش تعریف کنید.
+
+### ۱۷۴. چرا بعد از scale کردن Nest، cron چندبار اجرا می‌شود؟
+**پاسخ مورد انتظار:** هر replica ممکن است schedule را ثبت کند. scheduler اختصاصی، scheduler صف پایدار یا lease/lock با expiry و بررسی مالکیت به‌کار ببرید؛ write حساس ممکن است fencing بخواهد. overlap، timezone/DST، اجرای ازدست‌رفته و restart را در نظر بگیرید. decorator اجرای singleton در کل cluster یا exactly-once نمی‌دهد.
+
+### ۱۷۵. event داخل process با پیام پایدار و CQRS چه تفاوتی دارد؟
+**پاسخ مورد انتظار:** EventEmitter/EventEmitter2 و bus محلی CQRS کار داخل process را سازمان می‌دهند و broker پایدار نیستند. CQRS جداسازی command/query است و الزاماً event sourcing نمی‌خواهد. event تجاریِ نیازمند تحویل مطمئن بین سرویس‌ها، انتشار پایدار، راهبرد replay، قرارداد نسخه‌دار و مصرف‌کنندهٔ idempotent لازم دارد.
+
+منابع: [Caching در Nest](https://docs.nestjs.com/techniques/caching)، [Queues](https://docs.nestjs.com/techniques/queues). مطالعهٔ مکمل: فصل‌های 009، 011، 052–053 و 064.
+
+---
+
+## ۲۷. میکروسرویس و قابلیت اطمینان توزیع‌شده
+
+### ۱۷۶. `ClientProxy.send` با `emit` و message/event pattern چه فرقی دارد؟
+**پاسخ مورد انتظار:** send مدل request/response و Observable سرد برمی‌گرداند؛ برای آغاز کار subscribe یا به Promise تبدیل کنید. emit event را با semantics اشتراک متفاوت منتشر می‌کند. MessagePattern و EventPattern را مطابق مدل انتخاب کنید. acknowledgement broker اثبات تکمیل عملیات تجاری مصرف‌کننده نیست.
+
+### ۱۷۷. چرا remote request به timeout نیاز دارد؟
+**پاسخ مورد انتظار:** پاسخ ممکن است هرگز نرسد؛ timeout RxJS و ترجمهٔ خطا به قرارداد transport لازم است. تعداد call فعال را محدود و deadline منتقل کنید. unsubscribe/cancel تضمین نمی‌کند اثر جانبی سمت دور برگردد. retry را همراه idempotency طراحی کنید تا پرداخت یا اعلان دو بار انجام نشود.
+
+### ۱۷۸. ack، retry و dead-letter چگونه همکاری می‌کنند؟
+**پاسخ مورد انتظار:** پس از کار پایدار لازم ack بدهید؛ nack/requeue فقط با سیاست retry محدود و poison message برای بررسی کنار گذاشته شود. در RabbitMQ، noAck و prefetch را برای ack دستی تنظیم کنید. offset و مالکیت partition در Kafka معنای متفاوت دارد؛ تنظیم یک transport را مکانیکی روی دیگری اعمال نکنید.
+
+### ۱۷۹. ترتیب و تضمین تحویل پیام به چه چیزی بستگی دارد؟
+**پاسخ مورد انتظار:** ترتیب معمولاً برای queue/partition/key با تنظیم مصرف مشخص است، نه کل سیستم. at-least-once تکرار و at-most-once احتمال فقدان دارد. ادعای exactly-once مرز تعریف‌شده دارد و خودکار سرویس خارجی را شامل نمی‌شود. ordering/version check تجاری و dedup را صریح پیاده کنید.
+
+### ۱۸۰. outbox و saga چه مسائل متفاوتی حل می‌کنند؟
+**پاسخ مورد انتظار:** outbox وضعیت و رکورد انتشار را در یک transaction محلی ثبت می‌کند؛ relay با retry می‌فرستد و مصرف‌کننده همچنان dedup می‌خواهد. saga گردش چندمرحله‌ای را با جبران صریح هماهنگ می‌کند؛ compensation هم ممکن است شکست بخورد. هیچ‌کدام rollback سراسری جادویی نیستند؛ event شناسهٔ پایدار و schema نسخه‌دار می‌خواهد.
+
+### ۱۸۱. circuit breaker با retry، timeout و bulkhead چه تفاوتی دارد؟
+**پاسخ مورد انتظار:** timeout انتظار را محدود، retry شکست منتخب را تکرار، circuit breaker تماس با dependency خراب را موقتاً متوقف و bulkhead ظرفیت مصرفی آن را محدود می‌کند. بودجهٔ کلی و مشاهده‌پذیری تغییر حالت لازم است. fallback باید صحت تجاری، خصوصاً مجوز، پول و موجودی را حفظ کند.
+
+### ۱۸۲. در برنامهٔ hybrid/RPC کدام جزئیات Nest فرق دارند؟
+**پاسخ مورد انتظار:** connectMicroservice پیش‌فرض تنظیمات global HTTP را ارث نمی‌برد؛ inheritAppConfig و نیاز هر transport را بررسی کنید. به‌جای فرض رفتار HttpException از exception/filter متناسب RPC استفاده کنید. استخراج context در HTTP، WS، GraphQL و RPC متفاوت است. trace/request/tenant context باید از مرز پیام منتقل شود.
+
+### ۱۸۳. چه زمانی modular monolith از microservices بهتر است؟
+**پاسخ مورد انتظار:** وقتی اندازهٔ تیم، نیاز scale/release مستقل و مرز دامنه هزینهٔ توزیع را توجیه نمی‌کنند. ماژول Nest می‌تواند بدون network hop مرزبندی بدهد. microservice خطای جزئی، تحول قرارداد، observability و مالکیت داده می‌آورد؛ استخراج سرویس باید محدودیت واقعی را حل کند، نه صرفاً از قابلیت framework استفاده کند.
+
+مرجع: [Microservices در Nest](https://docs.nestjs.com/microservices/basics). مطالعهٔ مکمل: فصل‌های 013، 018، 051–053 و 059.
+
+---
+
+## ۲۸. GraphQL، WebSocket، SSE و gRPC
+
+### ۱۸۴. code-first و schema-first و GraphQL input با DTO چه تفاوتی دارند؟
+**پاسخ مورد انتظار:** code-first از type دکوره‌شده schema می‌سازد و schema-first از SDL آغاز می‌کند. GraphQL شکل schema را بررسی می‌کند، ولی قید تجاری هنوز validation/authorization می‌خواهد. کلاس object و input نقش‌های مختلف دارند؛ type در TypeScript به‌تنهایی schema اجرایی نیست. resolver را مثل controller نازک نگه دارید.
+
+### ۱۸۵. DataLoader چگونه N+1 را حل و گاهی داده را افشا می‌کند؟
+**پاسخ مورد انتظار:** loadها را معمولاً در هر request batch و memoize می‌کند. batch function باید خروجی را هم‌تراز ترتیب keyها، حتی موارد مفقود، برگرداند. loader سراسری ممکن است tenant/permission را مخلوط یا دادهٔ کهنه بدهد. context مجوز را لحاظ و در صورت نیاز cache محلی را بعد از mutation invalidate کنید.
+
+### ۱۸۶. guard و interceptor چگونه بر GraphQL اعمال می‌شوند؟
+**پاسخ مورد انتظار:** به‌جای فرض switchToHttp از GqlExecutionContext context بگیرید. enhancerهای field resolver را آگاهانه تنظیم کنید؛ الزاماً پیش‌فرض روی هر ResolveField اجرا نمی‌شوند. سیاست field/resource و سقف depth، complexity، pagination و batching را اجرا کنید. authentication در resolver بالایی ممکن است از فیلد حساس داخلی محافظت نکند.
+
+### ۱۸۷. احراز هویت WebSocket در طول اتصال چگونه حفظ می‌شود؟
+**پاسخ مورد انتظار:** handshake را verify، هویت معتبر را متصل و عملیات پیام/عضویت room را authorize کنید؛ برای expiry و revoke در اتصال موجود سیاست داشته باشید. نام room کاربر قابل‌اعتماد نیست. HTTP guard خودکار WS guard درست نیست؛ WS context و مدیریت خطای سازگار با WsException لازم است.
+
+### ۱۸۸. برای scale کردن Socket.IO بین instanceها چه لازم است؟
+**پاسخ مورد انتظار:** adapter مشترک مناسب برای broadcast و در حالت HTTP long-polling، affinity در load balancer طراحی کنید. Redis adapter تاریخچهٔ پایدار نیست. buffer خروجی، client کند، reconnect/replay، heartbeat و backpressure را کنترل کنید. deployment فقط WebSocket با long-polling نیاز affinity یکسان ندارد.
+
+### ۱۸۹. SSE، WebSocket و long polling چه تفاوتی دارند؟
+**پاسخ مورد انتظار:** SSE انتقال متنی یک‌طرفهٔ سرور به client روی HTTP با پشتیبانی reconnect است؛ WebSocket دوطرفه است. long polling چرخهٔ درخواست معمولی با overhead بیشتر دارد. بر اساس جهت، latency، proxy و client انتخاب کنید. SSE به teardown، سیاست replay/Last-Event-ID و تنظیم buffering/timeout proxy نیاز دارد.
+
+### ۱۹۰. چه جزئیات gRPC در production خطا می‌سازند؟
+**پاسخ مورد انتظار:** شمارهٔ field در Protobuf شناسهٔ قرارداد است؛ سازگار تکامل دهید و بی‌محابا تغییر/استفادهٔ مجدد نکنید. deadline، status، لغو stream و metadata/auth را مدیریت کنید. عدد 64-bit ممکن است خارج از محدودهٔ امن JavaScript باشد؛ نمایش loader را بررسی کنید و کورکورانه Number نکنید. مرورگر ممکن است gRPC-Web یا gateway بخواهد.
+
+### ۱۹۱. خطا در transportهای مختلف چگونه نگاشت می‌شود؟
+**پاسخ مورد انتظار:** خطای domain مستقل بماند و در مرز به HTTP status، GraphQL error، event وب‌سوکت یا gRPC/RPC status تبدیل شود. stack/secret را افشا نکنید؛ correlation ID و code عمومی پایدار بدهید. وجود همزمان دادهٔ جزئی و errors در GraphQL با پاسخ متعارف همه‌یا‌هیچ HTTP متفاوت است.
+
+مرجع: [اجرای GraphQL و enhancerها در Nest](https://docs.nestjs.com/graphql/other-features). مطالعهٔ مکمل: فصل‌های 016–017، 043–044 و 063.
+
+---
+
+## ۲۹. RxJS و راهبرد تست
+
+### ۱۹۲. Observable با Promise و cold/hot و completion چه تفاوتی دارد؟
+**پاسخ مورد انتظار:** Promise یک بار settle می‌شود؛ Observable صفر تا چند مقدار و teardown در unsubscribe دارد. cold producer معمولاً برای هر subscription شروع و hot مستقل/مشترک تولید می‌کند. unsubscribe فقط اگر teardown پیاده شود کار زیربنایی را لغو می‌کند. Nest برای خروجی معمول HTTP منتظر completion است؛ جریان نامتناهی قرارداد streaming صریح می‌خواهد.
+
+### ۱۹۳. switchMap، mergeMap، concatMap و exhaustMap چگونه انتخاب می‌شوند؟
+**پاسخ مورد انتظار:** switchMap اشتراک داخلی قبلی را جایگزین؛ mergeMap کارها را با concurrency قابل‌تنظیم همپوشان؛ concatMap آن‌ها را ترتیبی؛ exhaustMap ورودی جدید را هنگام مشغولی نادیده می‌گیرد. انتخاب تابع semantics کسب‌وکار است. لغو اشتراک تضمین برگشت write دور نیست؛ switchMap برای writeهایی که همه باید تکمیل شوند خطرناک است.
+
+### ۱۹۴. map، tap، catchError، finalize و firstValueFrom چه می‌کنند؟
+**پاسخ مورد انتظار:** map تبدیل، tap مشاهدهٔ side effect، catchError جایگزینی/پرتاب مجدد جریان شکست‌خورده و finalize پاکسازی در complete/error/unsubscribe است. firstValueFrom اولین مقدار و lastValueFrom پایان را انتظار می‌کشد. جریان خالی یا بی‌پایان default/timeout آگاهانه می‌خواهد. finalize اثبات رسیدن پاسخ به client نیست.
+
+### ۱۹۵. در unit، integration، contract و e2e چه چیزی mock می‌شود؟
+**پاسخ مورد انتظار:** unit قانون تجاری را ایزوله؛ integration مرز واقعی مثل constraint دیتابیس را بررسی؛ contract سازگاری API/پیام را کنترل و e2e جریان نمایندهٔ کاربر را دنبال می‌کند. mock repository نمی‌تواند isolation تراکنش را ثابت کند. برای رفتار وابسته به زیرساخت، نمونهٔ واقعی و مجموعهٔ کوچک تست تمام‌مسیرِ ارزشمند داشته باشید.
+
+### ۱۹۶. guard و scoped provider را در تست Nest چگونه جایگزین می‌کنید؟
+**پاسخ مورد انتظار:** قبل از compile، token دقیق provider/guard را override کنید. برای APP_GUARD، alias با useExisting می‌تواند خود guard را قابل‌جایگزینی کند. request-scoped را با context ID کنترل‌شده resolve کنید، نه get ثابت. برای بررسی قرارداد، pipe، serializer، prefix و filter production را در bootstrap تست هم نصب کنید.
+
+### ۱۹۷. چه چیزی تست async را flaky یا گمراه‌کننده می‌کند؟
+**پاسخ مورد انتظار:** await فراموش‌شده، assertion در callback اجرا‌نشده، sleep دلخواه، clock/random کنترل‌نشده، fixture مشترک قابل‌تغییر و handle باز. کار را await/return و مسیر شکست را assert کنید؛ زمان را فقط در جای مناسب کنترل و app/DB/queue را در finally یا hook ببندید. درصد coverage ارزش واقعی assertion را نشان نمی‌دهد.
+
+### ۱۹۸. load و resilience چگونه آزمایش می‌شوند؟
+**پاسخ مورد انتظار:** ترافیک/دادهٔ واقعی‌نما و warmup جدا داشته باشید؛ p50/p95/p99، نرخ خطا، throughput، Event Loop delay، حافظه و اشباع dependency را بسنجید. کندی/قطعی و retry را تزریق کنید. میانگین سریع می‌تواند tail latency بد را پنهان کند؛ throughput مصنوعی محلی تضمین ظرفیت production نیست.
+
+### ۱۹۹. چه assertionهایی به تست API ارزش واقعی می‌دهند؟
+**پاسخ مورد انتظار:** علاوه بر status و قرارداد پاسخ، side effect تجاری، دسترسی ممنوع، ورودی خراب، تکرار و cleanup را بررسی کنید. نبود فیلد محافظت‌شده و بقای invariant دیتابیس بعد از خطا را assert کنید. تستی که فقط 200 را می‌بیند ممکن است نشت داده یا write تکراری خاموش را تشخیص ندهد.
+
+تمرین منتخب: [مثال 020](020_nestjs_testing_scopes/main.ts). مرجع: [Testing در Nest](https://docs.nestjs.com/fundamentals/testing).
+
+---
+
+## ۳۰. تنظیمات، مشاهده‌پذیری و استقرار
+
+### ۲۰۰. environment configuration چگونه validate می‌شود؟
+**پاسخ مورد انتظار:** env رشته‌ای را آگاهانه parse و برای مقدار الزامیِ مفقود/نامعتبر startup را متوقف کنید. `ConfigService.get<number>` خودش رشته را عدد نمی‌کند. URL/بازه را validate و secret را از نمونهٔ commit‌شده جدا کنید. پیش از initialization ماژول وابسته تنظیمات آماده باشد؛ تقدم و rotation مستند شود.
+
+### ۲۰۱. log، metric و trace چه اطلاعاتی باید داشته باشند؟
+**پاسخ مورد انتظار:** log ساختاریافته با فیلد محدود و correlation ID؛ metric درخواست/dependency با cardinality کنترل‌شده؛ trace توزیع‌شده با context منتقل‌شده. credential/دادهٔ شخصی را redact کنید. user/request ID متغیر را label metric نکنید. زمان و نتیجه را در مرزی ثبت کنید که واقعاً latency آن موردنظر است.
+
+### ۲۰۲. readiness، liveness و startup check چه تفاوتی دارند؟
+**پاسخ مورد انتظار:** liveness نیاز process به restart، readiness آمادگی دریافت ترافیک و startup فرصت initialization را مشخص می‌کند. قطعی دیتابیس مشترک نباید بی‌دلیل همهٔ replicaها را restart کند. در shutdown ابتدا unready، سپس drain محدود و بستن dependency انجام شود. پاسخ health تنظیم حساس را افشا نکند.
+
+### ۲۰۳. اجرای Node در container و shutdown تمیز چگونه است؟
+**پاسخ مورد انتظار:** build بازتولیدپذیر، کاربر کم‌دسترسی، سقف CPU/حافظه و آرایش process با انتقال signal داشته باشید. startup با exec-form یا init مناسب، shutdown hooks و مهلت drain سازگار با orchestrator لازم است. pool اتصال و تعداد worker هر replica باید بودجهٔ کل deployment را رعایت کند.
+
+### ۲۰۴. latency بالا با CPU پایین را چگونه تشخیص می‌دهید؟
+**پاسخ مورد انتظار:** انتظار pool، query دیتابیس، remote call، DNS، اتصال، صف، lock و انتقال پاسخ را تفکیک کنید. trace و metric dependency لازم است، نه فقط CPU profile. deadline و concurrency محدود اعمال کنید. افزایش pool libuv یا replica بدون یافتن گلوگاه ممکن است اشباع downstream را بدتر کند.
+
+### ۲۰۵. CPU بالا یا Event Loop مسدود را چگونه بررسی می‌کنید؟
+**پاسخ مورد انتظار:** delay/utilization حلقه و CPU profile را بگیرید و مسیر داغ را با payload و GC مرتبط کنید. API همزمان، regex، serialization، validation و logging را بررسی کنید. اجرای CPU را از انتظار I/O جدا کنید؛ worker یا سرویس دیگر زمانی مناسب است که اندازه‌گیری هزینهٔ پیام، زمان‌بندی و حافظه را توجیه کند.
+
+### ۲۰۶. pipeline CI نود/Nest شامل چیست؟
+**پاسخ مورد انتظار:** نصب بازتولیدپذیر، typecheck صریح، تست مرتبط، build، بررسی وابستگی/امنیت و اعتبار artifact. runtime/dev dependency و خروجی تولیدی آگاهانه باشند؛ transpile-only جای typecheck نیست. در صورت تناسب یک artifact بسازید و همان را promote کنید. migration هنگام rollout باید با نسخهٔ قدیم و جدید سازگار باشد.
+
+### ۲۰۷. تصمیم طراحی Senior را در مصاحبه چگونه توضیح می‌دهید؟
+**پاسخ مورد انتظار:** نیاز و مقیاس را روشن، invariant را تعریف و طراحی ساده پیشنهاد کنید؛ سپس گلوگاه، شکست، سازگاری، امنیت و observability را بسنجید. جایگزین‌ها و شواهدی که نظرتان را عوض می‌کند بگویید و برنامهٔ rollout/test بدهید. نام‌بردن pattern بدون اتصال به قید واقعی کافی نیست.
+
+مطالعهٔ مکمل: فصل‌های 012، 015، 022، 031، 035، 040 و 067.
+
+---
+
+# بخش پنجم: تمرین کدنویسی و سناریوهای عیب‌یابی
+
+## ۳۱. تمرین عملی با راه‌حل مورد انتظار
+
+### ۲۰۸. خروجی sync، nextTick و Promise را در CJS پیش‌بینی کنید.
+**پاسخ مورد انتظار:** در entrypoint مستقل CommonJS، قطعهٔ زیر `A, B, N, P, M` چاپ می‌کند؛ Promise.then و queueMicrotask اینجا FIFO و بعد از nextTick هستند. پیش از تعمیم بپرسید منظور CJS، سطح بالای ESM یا داخل callback است. قانون قطعی عمومی برای ترتیب timer/immediate اضافه نکنید.
+
+</div>
+
+```js
+console.log('A');
+Promise.resolve().then(() => console.log('P'));
+queueMicrotask(() => console.log('M'));
+process.nextTick(() => console.log('N'));
+console.log('B');
+```
+
+<div dir="rtl" style="text-align: right;">
+
+### ۲۰۹. async map مرتب با concurrency سه بسازید.
+**پاسخ مورد انتظار:** سه worker با index بعدی مشترک اجرا کنید؛ هرکدام خروجی را در جای اصلی می‌گذارد و پس از پایان آیتم بعد را می‌گیرد. limit را validate و سیاست شکست را روشن کنید. مثال 017 مدل settle-all و assertion حداکثر کار فعال دارد؛ مدل fail-fast همچنان باید کار آغازشده و لغو احتمالی را مدیریت کند.
+
+### ۲۱۰. برای عملیات async مهلت واقعی بسازید.
+**پاسخ مورد انتظار:** controller لغو بسازید، abort را زمان‌بندی، signal را به API پشتیبان بدهید، کار را await و timer را در finally پاک کنید. در صورت نیاز لغو caller را هم منتقل کنید. timeout/cancellation را از خطای تجاری جدا کنید. در 017 لغو timer معلق بدون وابستگی به اینترنت assert می‌شود.
+
+### ۲۱۱. export حجیم را بدون بارگیری کامل stream کنید.
+**پاسخ مورد انتظار:** source با batch محدود، Transform encoding و pipeline تا مقصد بسازید؛ لغو و بستن cursor را مدیریت کنید. backpressure نوشتن و در صورت کاربرد CSV formula injection را کنترل کنید. مثال 018 pipeline کوچک با sink کند را بررسی می‌کند؛ شبیه‌ساز export دیتابیس یا پیاده‌سازی امنیت CSV نیست.
+
+### ۲۱۲. DTO با رد فیلد اضافه و query parsing امن بسازید.
+**پاسخ مورد انتظار:** decoratorهای class-validator، ValidationPipe سراسری با whitelist و forbidNonWhitelisted و ParseBoolPipe/ParseIntPipe صریح به‌کار ببرید. مثال 019 درخواست معتبر/نامعتبر می‌زند و false شدن رشتهٔ false و 400 برای فیلد اضافه و email خراب را بررسی می‌کند. Swagger metadata به‌تنهایی کافی نیست.
+
+### ۲۱۳. guard مبتنی بر metadata برای مجوز بسازید.
+**پاسخ مورد انتظار:** SetMetadata/Reflector و هویت معتبر authentication را بخوانید؛ تقدم یا merge سیاست handler/class را روشن کنید و در صورت نیاز APP_GUARD ثبت کنید. نبود هویت، مجوز ناکافی، دسترسی مجاز و public را بررسی کنید. مثال‌های اولیهٔ role-header فقط نمایش pipeline هستند؛ role قابل‌کنترل client احراز هویت production نیست.
+
+### ۲۱۴. سرایت REQUEST scope را نمایش و آزمایش کنید.
+**پاسخ مورد انتظار:** dependency درخواست در یک context یک ID دارد؛ مصرف‌کنندهٔ default در درخواست بعدی دوباره ساخته می‌شود و singleton نامرتبط مشترک می‌ماند. مثال HTTP شمارهٔ 019 و context دستی 020 این هویت‌ها را assert می‌کنند. مقایسهٔ صرف خروجی متد ممکن است توضیح اشتباه scope را پنهان کند.
+
+### ۲۱۵. شکست سرویس را بدون دیتابیس واقعی آزمایش کنید.
+**پاسخ مورد انتظار:** token repository را با fake دارای reject جایگزین، شکست و نگاشت عمومی موردنظر را await/assert و TestingModule را ببندید. مثال 020 جایگزینی موفق، انتشار rejection و resolution scoped را بررسی می‌کند. uniqueness، locking و rollback واقعی همچنان تست integration دیتابیس لازم دارند.
+
+---
+
+## ۳۲. سناریوهای مصاحبه و معیار ارزیابی
+
+### ۲۱۶. endpoint پرداخت بعد از retry دو بار پول کم کرده؛ چه تغییری می‌دهید؟
+**پاسخ مورد انتظار:** پیش از فرض شکست تماس اول، timeout اولیه و پاسخ provider را trace کنید. idempotency key پایدار و محدود به caller/operation، تطبیق payload، تغییر حالت atomic و در صورت وجود idempotency provider اضافه کنید. تکرار همزمان و crash window را تست و نتیجهٔ مبهم را reconcile کنید. افزایش timeout به‌تنهایی صحت نمی‌دهد.
+
+### ۲۱۷. حافظه ساعت‌ها رشد می‌کند و restart موقتاً حل می‌کند؛ قدم بعد چیست؟
+**پاسخ مورد انتظار:** metricهای process/heap/external و retaining path را زیر بار مشابه مقایسه کنید؛ cache، listener، Promise معلق، request نگه‌داشته‌شده و buffer را بررسی کنید. بازتولید امن و محدودکردن منبع لازم است. افزایش heap یا restart دوره‌ای شاید علامت را کم کند ولی علت را پیدا نمی‌کند. پس از اصلاح، plateau پایدار حافظه را تأیید کنید.
+
+### ۲۱۸. یک tenant دادهٔ cache tenant دیگر را می‌بیند؛ کجا را بررسی می‌کنید؟
+**پاسخ مورد انتظار:** key cache/loader، user state قابل‌تغییر singleton، استخراج tenant معتبر و scope query را ببینید. مسیر cache ناامن را غیرفعال/ایزوله، همهٔ مرزهای معیوب را اصلاح و HTTP، job و GraphQL را cross-tenant تست کنید. پاک‌کردن cache به‌تنهایی نبود authorization را ترمیم نمی‌کند.
+
+### ۲۱۹. با افزودن replica، latency دیتابیس بدتر شده؛ چرا؟
+**پاسخ مورد انتظار:** هر replica pool، درخواست موازی، cron و فشار retry اضافه می‌کند. مجموع اتصال، انتظار، query plan، lock و اشباع را اندازه بگیرید. admission/concurrency را محدود، pool را در مقیاس کل تنظیم و query کند یا کار تکراری را اصلاح کنید. instance بیشتر API خودکار ظرفیت دیتابیس نمی‌سازد.
+
+### ۲۲۰. ایمیل صف بعد از crash گم یا دو بار ارسال شده؛ تحلیل چیست؟
+**پاسخ مورد انتظار:** مرز enqueue پایدار، ack، ارسال provider و commit وضعیت را پیدا کنید. outbox گم‌شدن بین commit و publication و idempotency مصرف‌کننده/provider تکرار پس از تحویل را کنترل می‌کند. بعضی providerهای ایمیل dedup دقیق ندارند؛ تضمین قابل‌قبول و reconciliation را تعریف کنید. بدون مرز عملی، exactly-once وعده ندهید.
+
+### ۲۲۱. shutdown درخواست را قطع یا job را معلق می‌کند؛ چه کم است؟
+**پاسخ مورد انتظار:** انتقال signal، خروج از readiness، drain load balancer، پذیرش کار تازه، tracking کار جاری، pause/drain worker، ترتیب بستن resource و deadline را بررسی کنید. shutdown hooks را فعال و termination حین بار واقعی را تست کنید. cleanup سیگنال تکراری را تحمل کند؛ async در exit listener دیر است.
+
+### ۲۲۲. تست موفق است ولی production درخواست را رد می‌کند؛ چه فرقی دارد؟
+**پاسخ مورد انتظار:** pipe validation، guard، serializer/filter، prefix/versioning، adapter، proxy، parse تنظیمات، نسخهٔ dependency و schema دیتابیس را مقایسه کنید. تنظیم bootstrap مشترک و قرارداد نماینده با dependency واقعی‌نما داشته باشید. unit test صرف controller این مرزها را پوشش نمی‌دهد.
+
+### ۲۲۳. برای طراحی سرویس سفارش Nest فقط ۴۵ دقیقه دارید؛ چه می‌گویید؟
+**پاسخ مورد انتظار:** scope/invariant را تعیین؛ ماژول order، inventory، payment و notification؛ مرز API/DTO/auth، مدل داده/transaction، idempotency/outbox و حالت شکست را مشخص کنید. index، pagination، سیاست صف، metric، health/shutdown، تست و rollout اضافه کنید. کفایت modular monolith و قید قابل‌اندازه‌گیریِ توجیه‌کنندهٔ استخراج سرویس را توضیح دهید.
+
+**معیار تمرین:** نمونهٔ شکست واقعی، invariant، پیاده‌سازی، tradeoff و روش بررسی را بگویید. در تمرین کدنویسی ورودی خالی، آرگومان نامعتبر، خطا، درخواست همزمان، cleanup و پیچیدگی زمان/حافظه را هم مطرح کنید.
+
+---
+
 ## چک‌لیست جمع‌بندی مصاحبه
 
 قبل از مصاحبه این فیچرها را سریع مرور کنید:
@@ -387,5 +887,9 @@
 **`Node.js`:** `Event Loop`، `libuv`، `nextTick` vs timers، `Promise` tools، `CJS/ESM`، `Stream`/`Buffer`، `EventEmitter`، `Worker Threads`/`cluster`، `graceful shutdown`.
 
 **`NestJS`:** `Module/Controller/Provider`، `DI` و `scopes`، ترتیب `Middleware/Guard/Interceptor/Pipe/Filter`، `DTO` + `ValidationPipe`، `Dynamic Module`، lifecycle hooks، میکروسرویس/WS/GraphQL در حد فیچر، `TestingModule`.
+
+**زبان و production:** closure/this/prototype، حذف type در runtime، لغو و concurrency محدود، امنیت و جداسازی tenant، تراکنش و constraint، cache key/invalidation، idempotency صف، قرارداد transport، teardown در RxJS، تست معنادار، observability، نسخهٔ پشتیبانی‌شده، shutdown و تحلیل incident.
+
+**منابع رسمی:** [TypeScript handbook](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html)، [Node API](https://nodejs.org/api/)، [مستندات Nest](https://docs.nestjs.com/). پیش از استفاده از نمونهٔ وابسته به API، نسخهٔ مستندات و package نصب‌شده را تطبیق دهید.
 
 </div>

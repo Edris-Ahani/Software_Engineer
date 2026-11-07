@@ -144,7 +144,8 @@ async function bootstrap() {
   section("4) Swagger document generated");
   const docs = await fetch(`${base}/docs-json`);
   step("GET /docs-json status", docs.status);
-  step("openapi title", (await docs.json()).info?.title);
+  const servedDocument = (await docs.json()) as { info?: { title?: string } };
+  step("openapi title", servedDocument.info?.title);
   note("Also available: GraphQL code-first/schema-first, WebSocket Gateways, Schedule, CQRS modules");
   ok("Versioning + Cache + Microservice hybrid + Swagger are key advanced Nest features");
 

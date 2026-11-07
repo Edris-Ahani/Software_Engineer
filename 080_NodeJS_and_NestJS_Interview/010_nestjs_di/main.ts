@@ -78,7 +78,7 @@ class CarService {
   constructor(
     private readonly engine: EngineService,
     @Inject(APP_CONFIG) private readonly config: { brand: string },
-    @Optional() private readonly missing?: { label: string },
+    @Optional() private readonly missing: { label: string } | undefined,
     private readonly singleton: SingletonCounter,
     private readonly transientConsumerA: TransientConsumerA,
     private readonly transientConsumerB: TransientConsumerB,
@@ -186,7 +186,7 @@ async function bootstrap() {
   const circ = await getJson(`${base}/di/circular`);
   step("circular ping", circ.body);
   ok("IoC container owns lifetimes; tokens unlock non-class injections");
-  warn("Avoid REQUEST-scoped deps inside careless singletons (see demo 016)");
+  warn("REQUEST scope bubbles to dependent consumers; account for allocations (see demos 019 and 020)");
 
   await app.close();
 }
