@@ -15,11 +15,14 @@ This repository is organized into 78 distinct chapters, each focusing on a criti
 - **DevOps & Infrastructure:** Docker, Kubernetes, CI/CD, Deployment Strategies (Blue/Green, Canary).
 
 ## 🗂️ Structure
+
+The dedicated [Nginx handbook](087_Nginx/README.md) adds 22 ordered bilingual lessons, from fundamentals and reverse proxying to TLS, caching, troubleshooting, and deployment, with a runnable local lab.
+
 Each topic is encapsulated in its own numbered directory for easy navigation. Inside every directory, you will find:
 1. `..._English.md`: An in-depth explanation of the concept in English.
 2. `..._Persian.md`: A localized, highly detailed explanation of the concept in Persian.
 
-All code snippets, architectural examples, and best practices are fully contained within these Markdown files, ensuring maximum portability and readability.
+Concept explanations, architectural examples, and best practices are documented in Markdown. Chapters with runnable examples also include source files and execution guides.
 
 ---
 
@@ -42,10 +45,13 @@ All code snippets, architectural examples, and best practices are fully containe
 - **دواپس و زیرساخت:** داکر، کوبرنیتیز و استراتژی‌های استقرار کدهای جدید (Blue/Green و Canary).
 
 ## 🗂️ ساختار پروژه
+
+[راهنمای اختصاصی Nginx](087_Nginx/README.md) شامل ۲۲ بخش دوزبانه به‌ترتیب یادگیری، از مبانی و پراکسی تا TLS، کش، عیب‌یابی و استقرار، همراه با آزمایشگاه اجرایی محلی است.
+
 هر مبحث در یک پوشه شماره‌گذاری‌شده قرار دارد تا دسترسی به آن‌ها آسان باشد. درون هر پوشه موارد زیر را پیدا خواهید کرد:
 ۱. `..._English.md`: توضیح عمیق و تخصصی مفهوم به زبان انگلیسی.
 ۲. `..._Persian.md`: توضیح بومی‌سازی‌شده، حرفه‌ای و دقیقِ همان مفهوم به زبان فارسی.
 
-تمامی قطعه کدها، مثال‌های معماری و بهترین روش‌ها (Best Practices) درون همین فایل‌های مارک‌داون گنجانده شده‌اند تا خوانایی و یکپارچگی پروژه حفظ شود.
+توضیحات مفاهیم، مثال‌های معماری و بهترین روش‌ها (Best Practices) در فایل‌های مارک‌داون آمده‌اند. فصل‌های دارای مثال اجرایی، فایل‌های کد و راهنمای اجرا نیز دارند.
 
 </div>
