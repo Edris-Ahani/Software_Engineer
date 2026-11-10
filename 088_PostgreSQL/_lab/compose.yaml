@@ -1,0 +1,57 @@
+services:
+  pg_primary:
+    image: pgvector/pgvector:pg16
+    container_name: pg_primary
+    restart: always
+    environment:
+      POSTGRES_DB: engineering_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_secure_pass
+      PGDATA: /var/lib/postgresql/data/pgdata
+    command: >
+      postgres
+      -c shared_preload_libraries='pg_stat_statements'
+      -c pg_stat_statements.track=all
+      -c max_connections=100
+      -c shared_buffers=256MB
+      -c work_mem=16MB
+      -c maintenance_work_mem=64MB
+      -c wal_level=replica
+      -c checkpoint_completion_target=0.9
+      -c logging_collector=on
+      -c log_min_duration_statement=250
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init_db:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d engineering_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pg_bouncer:
+    image: edoburu/pgbouncer:v1.22.0
+    container_name: pg_bouncer
+    restart: always
+    depends_on:
+      pg_primary:
+        condition: service_healthy
+    environment:
+      DB_HOST: pg_primary
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres_secure_pass
+      DB_NAME: engineering_db
+      LISTEN_PORT: 6432
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 500
+      DEFAULT_POOL_SIZE: 25
+      AUTH_TYPE: scram-sha-256
+    ports:
+      - "6432:6432"
+
+volumes:
+  pg_data:
+

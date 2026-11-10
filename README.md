@@ -17,6 +17,7 @@ This repository is organized into 78 distinct chapters, each focusing on a criti
 ## 🗂️ Structure
 
 The dedicated [Nginx handbook](087_Nginx/README.md) adds 22 ordered bilingual lessons, from fundamentals and reverse proxying to TLS, caching, troubleshooting, and deployment, with a runnable local lab.
+The dedicated [PostgreSQL handbook](088_PostgreSQL/README.md) provides 24 ordered bilingual lessons covering architecture, indexing, MVCC, partitioning, pgvector, WAL, replication, Patroni HA, and zero-downtime migrations with an executable Docker lab.
 
 Each topic is encapsulated in its own numbered directory for easy navigation. Inside every directory, you will find:
 1. `..._English.md`: An in-depth explanation of the concept in English.
@@ -47,6 +48,7 @@ Concept explanations, architectural examples, and best practices are documented 
 ## 🗂️ ساختار پروژه
 
 [راهنمای اختصاصی Nginx](087_Nginx/README.md) شامل ۲۲ بخش دوزبانه به‌ترتیب یادگیری، از مبانی و پراکسی تا TLS، کش، عیب‌یابی و استقرار، همراه با آزمایشگاه اجرایی محلی است.
+[راهنمای اختصاصی PostgreSQL](088_PostgreSQL/README.md) شامل ۲۴ بخش دوزبانه جامع از معماری پردازش‌ها، ایندکس‌ها، MVCC، پارتیشن‌بندی، جستجوی برداری هوش مصنوعی (pgvector)، لاگ‌های WAL، رپلیکیشن، کلاسترهای Patroni HA و تغییرات بدون قطعی، همراه با آزمایشگاه اجرایی داکر است.
 
 هر مبحث در یک پوشه شماره‌گذاری‌شده قرار دارد تا دسترسی به آن‌ها آسان باشد. درون هر پوشه موارد زیر را پیدا خواهید کرد:
 ۱. `..._English.md`: توضیح عمیق و تخصصی مفهوم به زبان انگلیسی.
