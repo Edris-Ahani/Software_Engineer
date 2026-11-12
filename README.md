@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # The Ultimate Software Engineering Handbook
 
 Welcome to the **Software Engineering Handbook** repository! This project serves as a comprehensive, bilingual (English & Persian) knowledge base covering everything a modern Software Engineer and System Architect needs to know.
@@ -17,7 +19,8 @@ This repository is organized into 78 distinct chapters, each focusing on a criti
 ## 🗂️ Structure
 
 The dedicated [Nginx handbook](087_Nginx/README.md) adds 22 ordered bilingual lessons, from fundamentals and reverse proxying to TLS, caching, troubleshooting, and deployment, with a runnable local lab.
-The dedicated [PostgreSQL handbook](088_PostgreSQL/README.md) provides 24 ordered bilingual lessons covering architecture, indexing, MVCC, partitioning, pgvector, WAL, replication, Patroni HA, and zero-downtime migrations with an executable Docker lab.
+The dedicated [PostgreSQL handbook](088_PostgreSQL/README.md) provides 25 ordered bilingual lessons covering architecture, indexing, MVCC, partitioning, pgvector, WAL, replication, Patroni HA, zero-downtime migrations, and distributed PostgreSQL with Citus. It includes the original Docker lab and a separate Citus cluster lab.
+The [NTP Server guide](089_NTP_Server/README.md) explains clock synchronization, real-world uses, NTP internals, security, Windows and Linux configuration, and troubleshooting in English and Persian.
 
 Each topic is encapsulated in its own numbered directory for easy navigation. Inside every directory, you will find:
 1. `..._English.md`: An in-depth explanation of the concept in English.
@@ -26,8 +29,6 @@ Each topic is encapsulated in its own numbered directory for easy navigation. In
 Concept explanations, architectural examples, and best practices are documented in Markdown. Chapters with runnable examples also include source files and execution guides.
 
 ---
-
-<div dir="rtl">
 
 # هندبوک جامع مهندسی نرم‌افزار
 
@@ -48,7 +49,8 @@ Concept explanations, architectural examples, and best practices are documented 
 ## 🗂️ ساختار پروژه
 
 [راهنمای اختصاصی Nginx](087_Nginx/README.md) شامل ۲۲ بخش دوزبانه به‌ترتیب یادگیری، از مبانی و پراکسی تا TLS، کش، عیب‌یابی و استقرار، همراه با آزمایشگاه اجرایی محلی است.
-[راهنمای اختصاصی PostgreSQL](088_PostgreSQL/README.md) شامل ۲۴ بخش دوزبانه جامع از معماری پردازش‌ها، ایندکس‌ها، MVCC، پارتیشن‌بندی، جستجوی برداری هوش مصنوعی (pgvector)، لاگ‌های WAL، رپلیکیشن، کلاسترهای Patroni HA و تغییرات بدون قطعی، همراه با آزمایشگاه اجرایی داکر است.
+[راهنمای اختصاصی PostgreSQL](088_PostgreSQL/README.md) شامل ۲۵ بخش دوزبانه جامع از معماری پردازش‌ها، ایندکس‌ها، MVCC، پارتیشن‌بندی، جستجوی برداری هوش مصنوعی (pgvector)، لاگ‌های WAL، رپلیکیشن، کلاسترهای Patroni HA، تغییرات بدون قطعی و PostgreSQL توزیع‌شده با Citus است؛ علاوه بر آزمایشگاه اصلی داکر، آزمایشگاه مستقل کلاستر Citus را نیز دارد.
+[راهنمای NTP Server](089_NTP_Server/README.md) به‌صورت دوزبانه، همگام‌سازی ساعت، کاربردهای واقعی، سازوکار NTP، امنیت، تنظیمات Windows و Linux و عیب‌یابی را توضیح می‌دهد.
 
 هر مبحث در یک پوشه شماره‌گذاری‌شده قرار دارد تا دسترسی به آن‌ها آسان باشد. درون هر پوشه موارد زیر را پیدا خواهید کرد:
 ۱. `..._English.md`: توضیح عمیق و تخصصی مفهوم به زبان انگلیسی.

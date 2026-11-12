@@ -40,6 +40,7 @@ def validate_structure():
         "022_security_roles_and_rls",
         "023_zero_downtime_migrations",
         "024_production_checklist_and_review",
+        "025_citus_distributed_postgresql",
     ]
 
     for lesson in expected_lessons:

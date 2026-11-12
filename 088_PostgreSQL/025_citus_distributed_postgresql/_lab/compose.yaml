@@ -1,0 +1,41 @@
+name: postgres-citus-lesson
+
+x-citus-node: &citus-node
+  image: citusdata/citus:13.0
+  environment:
+    POSTGRES_DB: citus_lab
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: citus_lab_only
+    # Trust is restricted to this disposable local teaching environment.
+    POSTGRES_HOST_AUTH_METHOD: trust
+  command: ["postgres", "-c", "shared_preload_libraries=citus"]
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U postgres -d citus_lab"]
+    interval: 3s
+    timeout: 3s
+    retries: 20
+
+services:
+  coordinator:
+    <<: *citus-node
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - coordinator_data:/var/lib/postgresql/data
+      - ./01_cluster.sql:/lesson/01_cluster.sql:ro
+      - ./02_demo.sql:/lesson/02_demo.sql:ro
+
+  worker1:
+    <<: *citus-node
+    volumes:
+      - worker1_data:/var/lib/postgresql/data
+
+  worker2:
+    <<: *citus-node
+    volumes:
+      - worker2_data:/var/lib/postgresql/data
+
+volumes:
+  coordinator_data:
+  worker1_data:
+  worker2_data:

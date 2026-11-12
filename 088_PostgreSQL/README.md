@@ -1,14 +1,15 @@
-# PostgreSQL — راهنمای جامع و مهندسی / Practical & Production Handbook
-
 <div dir="rtl">
 
-این مجموعهٔ دوزبانه در ادامهٔ فصل‌های مهندسی نرم‌افزار مخزن با نام `088_PostgreSQL` طراحی و پیاده‌سازی شده است. تمام پوشه‌های داخلی با پیشوند `001_` تا `024_` به ترتیب مسیر یادگیری استاندارد و مهندسی از مفاهیم اولیه و معماری پردازش‌ها تا کارایی پیشرفته، شاردینگ، ایندکس‌گذاری، امنیت و نگهداری پروداکشن تنظیم شده‌اند.
+# PostgreSQL — راهنمای جامع و مهندسی / Practical & Production Handbook
+
+این مجموعهٔ دوزبانه در ادامهٔ فصل‌های مهندسی نرم‌افزار مخزن با نام `088_PostgreSQL` طراحی و پیاده‌سازی شده است. تمام پوشه‌های داخلی با پیشوند `001_` تا `025_` به ترتیب مسیر یادگیری استاندارد و مهندسی از مفاهیم اولیه و معماری پردازش‌ها تا کارایی پیشرفته، شاردینگ، ایندکس‌گذاری، امنیت و نگهداری پروداکشن تنظیم شده‌اند.
 
 هر درس شامل دو فایل مجزای `..._Persian.md` و `..._English.md` است. هر درس شامل اهداف آموزشی، دیاگرام معماری، سناریوهای عملی SQL، بررسی عملکرد با `EXPLAIN (ANALYZE, BUFFERS)`، نکات پروداکشن و تمرین به همراه پاسخ است.
 
-</div>
-
 This bilingual handbook is structured in order of mastery: from internal process and memory architecture, data modeling, query optimization, and concurrency control to high availability, replication, connection pooling, and production readiness. Every lesson contains explicit English and Persian materials with production-grade SQL and architectural diagrams.
+
+درس [۰۲۵: Citus و PostgreSQL توزیع‌شده](025_citus_distributed_postgresql/01_025_citus_distributed_postgresql_Persian.md) کاربردهای Citus، کلید توزیع، co-location، محدودیت‌ها و آزمایشگاه مستقل یک coordinator و دو worker را توضیح می‌دهد.
+Lesson [025: Citus and Distributed PostgreSQL](025_citus_distributed_postgresql/01_025_citus_distributed_postgresql_English.md) covers use cases, distribution keys, colocation, limitations, and an independent coordinator/two-worker lab.
 
 - [راهنمای اجرای آزمایشگاه داکر — فارسی](00_HOW_TO_RUN_Persian.md)
 - [Docker Lab Run Guide — English](00_HOW_TO_RUN_English.md)
@@ -43,20 +44,21 @@ This bilingual handbook is structured in order of mastery: from internal process
 | `022` | [امنیت، کنترل نقش‌ها (RBAC) و امنیت سطری (RLS)](022_security_roles_and_rls/01_022_security_roles_and_rls_Persian.md) | [Security, RBAC, Data Encryption, and RLS](022_security_roles_and_rls/01_022_security_roles_and_rls_English.md) |
 | `023` | [مایگریشن‌های اسکیما بدون قطعی (Zero-Downtime)](023_zero_downtime_migrations/01_023_zero_downtime_migrations_Persian.md) | [Zero-Downtime Migrations and Safe DDL](023_zero_downtime_migrations/01_023_zero_downtime_migrations_English.md) |
 | `024` | [چک‌لیست استقرار، نگهداری و خطایابی پروداکشن](024_production_checklist_and_review/01_024_production_checklist_and_review_Persian.md) | [Production Checklist, Health Checks, and Incident Runbook](024_production_checklist_and_review/01_024_production_checklist_and_review_English.md) |
+| `025` | [Citus: مقیاس‌پذیری افقی و PostgreSQL توزیع‌شده](025_citus_distributed_postgresql/01_025_citus_distributed_postgresql_Persian.md) | [Citus: Horizontal Scaling and Distributed PostgreSQL](025_citus_distributed_postgresql/01_025_citus_distributed_postgresql_English.md) |
 
 ---
-
-<div dir="rtl">
 
 ## سطوح اولویت مطالعه
 
 1. **اولویت اول — مبانی و کارایی روزمره (درس‌های ۰۰۱ تا ۰۰۹):** درک حافظه و پردازش، مدل داده، ایندکس‌گذاری، تحلیل پلن اجرایی، MVCC، تراکنش‌ها و قفل‌ها برای هر توسعه‌دهنده بک‌اند و مهندس نرم‌افزار حیاتی است.
 2. **اولویت دوم — مهارت‌های پیشرفته داده و کوئری‌نویسی (درس‌های ۰۱۰ تا ۰۱۵):** کار با داده‌های نیمه‌ساختاریافته JSONB، توابع تحلیلی، پارتیشن‌بندی، جستجوی متنی، بردارها (pgvector برای هوش مصنوعی) و PgBouncer.
 3. **اولویت سوم — معماری زیرساخت، دسترسی‌پذیری و پروداکشن (درس‌های ۰۱۶ تا ۰۲۴):** رپلیکیشن، پایداری WAL، پشتیبان‌گیری در لحظه (PITR)، خوشه‌بندی High Availability، تغییرات اسکیما بدون قطعی و چک‌لیست پایش سیستم.
-
-</div>
+4. **اولویت چهارم — مقیاس‌پذیری افقی (درس ۰۲۵):** طراحی توزیع داده با Citus، برنامه‌های چندمستاجری، کوئری‌های هم‌مکان و ملاحظات بهره‌برداری چندنودی.
 
 **Priority Tier 1 — Core & Query Foundations (001–009):** Internal architecture, indexing, execution plans, MVCC, and transaction locking.
 **Priority Tier 2 — Advanced Storage & Analytical Features (010–015):** JSONB, Window functions, partitioning, FTS, AI vector search, and PgBouncer.
 **Priority Tier 3 — Reliability, Scaling, and SRE (016–024):** WAL durability, PITR, streaming/logical replication, HA clusters, zero-downtime DDL, and production checklists.
+**Priority Tier 4 — Horizontal Scaling (025):** Citus, tenant-based distribution, colocated queries, and multi-node operations.
+
+</div>
 
