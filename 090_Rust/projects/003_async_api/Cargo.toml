@@ -1,0 +1,16 @@
+[package]
+name = "async-api"
+version = "0.1.0"
+edition = "2024"
+publish = false
+default-run = "async-api"
+
+[workspace]
+
+[dependencies]
+axum = "0.8"
+serde = { version = "1", features = ["derive"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal", "sync", "time"] }
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }

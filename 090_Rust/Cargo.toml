@@ -1,0 +1,16 @@
+[workspace]
+members = ["examples", "projects/001_log_search", "projects/002_inventory"]
+exclude = ["projects/003_async_api"]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.85"
+version = "0.1.0"
+publish = false
+
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[workspace.lints.clippy]
+undocumented_unsafe_blocks = "deny"

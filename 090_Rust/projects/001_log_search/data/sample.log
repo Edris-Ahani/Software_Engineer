@@ -1,0 +1,5 @@
+INFO application started
+ERROR payment declined
+WARN retry scheduled
+ERROR cache unavailable
+INFO application stopped
