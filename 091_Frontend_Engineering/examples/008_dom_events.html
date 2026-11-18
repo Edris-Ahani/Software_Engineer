@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DOM events</title><link rel="stylesheet" href="../assets/base.css"><style></style></head>
+<body><header><a href="../">Lab home</a><h1>DOM events</h1></header><main>
+<form id="add"><label for="title">Item title</label> <input id="title" required maxlength="120">
+<button>Add item</button></form><ul id="items"></ul><p role="status" id="status"></p></main>
+<script type="module">
+const form = document.querySelector("#add");
+const input = document.querySelector("#title");
+const list = document.querySelector("#items");
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  const title = input.value.trim();
+  if (!title) { input.setCustomValidity("Enter a nonblank title"); input.reportValidity(); return; }
+  const li = document.createElement("li");
+  const text = document.createElement("span");
+  text.textContent = title + " ";
+  const button = document.createElement("button");
+  button.type = "button"; button.textContent = "Remove";
+  li.append(text, button); list.append(li); form.reset(); input.focus();
+  document.querySelector("#status").textContent = list.children.length + " items";
+});
+input.addEventListener("input", () => input.setCustomValidity(""));
+list.addEventListener("click", event => {
+  const button = event.target.closest("button");
+  if (!button || !list.contains(button)) return;
+  button.parentElement.remove(); input.focus();
+  document.querySelector("#status").textContent = list.children.length + " items";
+});
+</script></body></html>

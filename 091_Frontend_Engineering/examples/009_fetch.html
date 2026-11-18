@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fetch and cancellation</title><link rel="stylesheet" href="../assets/base.css"><style></style></head>
+<body><header><a href="../">Lab home</a><h1>Fetch and cancellation</h1></header><main>
+<div class="row"><button id="load">Load products</button><button id="failure">Simulate 503</button><button id="cancel">Cancel</button></div>
+<p role="status" id="status">Ready</p><ul id="items"></ul></main>
+<script type="module">
+import { fetchJson, validateProductPayload, createLatestRequest } from "../lib/http.mjs";
+const owner = createLatestRequest();
+const status = document.querySelector("#status");
+const list = document.querySelector("#items");
+async function load(path) {
+  const request = owner.begin(); status.textContent = "Loading"; list.replaceChildren();
+  try {
+    const data = validateProductPayload(await fetchJson(path, { signal: request.signal }));
+    if (!request.isCurrent()) return;
+    for (const item of data) {
+      const li = document.createElement("li"); li.textContent = item.name; list.append(li);
+    }
+    status.textContent = data.length + " products loaded";
+  } catch (error) {
+    if (!request.isCurrent()) return;
+    status.textContent = error.name === "AbortError" ? "Cancelled" : "Load failed: " + error.message;
+  }
+}
+document.querySelector("#load").onclick = () => load("/api/products");
+document.querySelector("#failure").onclick = () => load("/api/failure");
+document.querySelector("#cancel").onclick = () => { owner.dispose(); status.textContent = "Cancelled"; };
+window.addEventListener("pagehide", () => owner.dispose());
+</script></body></html>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Finite server-sent events</title><link rel="stylesheet" href="../assets/base.css"><style></style></head>
+<body><header><a href="../">Lab home</a><h1>Finite server-sent events</h1></header><main>
+<button id="connect">Receive three events</button><p role="status" id="status">Ready</p><ol id="events"></ol></main>
+<script type="module">
+let source;
+document.querySelector("#connect").onclick = () => {
+  source?.close(); document.querySelector("#events").replaceChildren();
+  document.querySelector("#status").textContent = "Connected";
+  source = new EventSource("/api/events");
+  source.onmessage = event => {
+    const data = JSON.parse(event.data);
+    const li = document.createElement("li"); li.textContent = "Event " + event.lastEventId + ": " + data.count;
+    document.querySelector("#events").append(li);
+    if (data.count === 3) { source.close(); document.querySelector("#status").textContent = "Completed and closed"; }
+  };
+  source.onerror = () => { source.close(); document.querySelector("#status").textContent = "Connection interrupted. Reconnect manually."; };
+};
+window.addEventListener("pagehide", () => source?.close());
+</script></body></html>

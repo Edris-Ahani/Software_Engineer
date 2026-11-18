@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accessible catalog</title><link rel="stylesheet" href="../../assets/base.css"><style></style></head>
+<body><header><a href="../../">Lab home</a><h1>Accessible catalog</h1></header><main>
+<form id="search"><label for="query">Product search</label> <input id="query" name="q" type="search" maxlength="120">
+<button>Search</button></form><p role="status" id="status"></p><section aria-label="Search results"><div class="grid" id="results"></div></section></main>
+<script type="module">
+import { products, searchProducts } from "../../lib/products.mjs";
+const form = document.querySelector("#search");
+const query = document.querySelector("#query");
+const list = document.querySelector("#results");
+function render() {
+  const items = searchProducts(products, query.value);
+  const nodes = items.map(item => {
+    const card = document.createElement("article"); card.className = "card";
+    const title = document.createElement("h2"); title.textContent = item.name;
+    const price = document.createElement("p");
+    price.textContent = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(item.priceCents / 100);
+    const category = document.createElement("p"); category.textContent = item.category;
+    card.append(title, price, category); return card;
+  });
+  list.replaceChildren(...nodes);
+  document.querySelector("#status").textContent = items.length + " products found";
+}
+function restore() { query.value = new URL(location.href).searchParams.get("q") ?? ""; render(); }
+form.onsubmit = event => {
+  event.preventDefault();
+  const url = new URL(location.href);
+  if (query.value.trim()) url.searchParams.set("q", query.value.trim()); else url.searchParams.delete("q");
+  history.pushState(null, "", url); render();
+};
+window.addEventListener("popstate", restore); restore();
+</script></body></html>

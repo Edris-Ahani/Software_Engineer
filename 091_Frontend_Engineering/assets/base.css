@@ -1,0 +1,27 @@
+:root {
+  color-scheme: light dark;
+  --space: 1rem;
+  --accent: #2556c7;
+  font: 1rem/1.6 system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: var(--space); }
+main, header, footer { max-inline-size: 68rem; margin-inline: auto; }
+main { padding-block: 1rem; }
+a { color: light-dark(#153f9c, #b5cdff); }
+button, input, select { font: inherit; padding: .5rem .75rem; }
+button, summary { cursor: pointer; }
+button { min-block-size: 2.75rem; }
+input { max-inline-size: 100%; }
+label { display: inline-block; margin-block: .4rem; }
+:focus-visible { outline: 3px solid light-dark(#8c3600, #ffca7a); outline-offset: 3px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: var(--space); }
+.card { padding: var(--space); border: 1px solid light-dark(#6b7280, #aeb7c5); border-radius: .5rem; min-inline-size: 0; overflow-wrap: anywhere; }
+.row { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+li { margin-block: .5rem; }
+output, [role="status"] { display: block; margin-block: .75rem; }
+table { border-collapse: collapse; }
+th, td { border: 1px solid; padding: .5rem; text-align: start; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}

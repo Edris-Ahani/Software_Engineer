@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Responsive layout</title><link rel="stylesheet" href="../assets/base.css"><style>.layout { display: grid; gap: 1rem; }
+.layout > * { min-inline-size: 0; }
+.container { container-type: inline-size; margin-block: 1rem; }
+@media (min-width: 48rem) { .layout { grid-template-columns: 14rem minmax(0, 1fr); } }
+@container (min-width: 32rem) { .adaptive { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; } }</style></head>
+<body><header><a href="../">Lab home</a><h1>Responsive layout</h1></header><main>
+<div class="layout"><aside class="card">Sidebar with ordinary document order</aside>
+<section aria-label="Products"><div class="grid">
+<article class="card"><h2>Keyboard</h2><p>Flexible card width and logical spacing.</p></article>
+<article class="card"><h2>VeryLongUnbrokenProductIdentifierThatMustNotForceHorizontalScrolling</h2><p>Content remains readable.</p></article>
+</div><div class="container"><article class="adaptive card"><h2>Container-aware card</h2><p>Two columns only when its own container fits.</p></article></div></section></div></main>
+</body></html>

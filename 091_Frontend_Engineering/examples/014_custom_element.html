@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Custom element</title><link rel="stylesheet" href="../assets/base.css"><style></style></head>
+<body><header><a href="../">Lab home</a><h1>Custom element</h1></header><main>
+<learning-counter></learning-counter><p role="status" id="status">No changes yet</p></main>
+<script type="module">
+class LearningCounter extends HTMLElement {
+  #value = 0;
+  #button;
+  #increment = () => {
+    this.#value++;
+    this.#button.textContent = "Count: " + this.#value;
+    this.dispatchEvent(new CustomEvent("valuechange", { detail: { value: this.#value }, bubbles: true }));
+  };
+  get value() { return this.#value; }
+  connectedCallback() {
+    if (!this.#button) {
+      this.#button = document.createElement("button");
+      this.#button.type = "button"; this.#button.textContent = "Count: " + this.#value; this.append(this.#button);
+    }
+    this.#button.addEventListener("click", this.#increment);
+  }
+  disconnectedCallback() { this.#button?.removeEventListener("click", this.#increment); }
+}
+if (!customElements.get("learning-counter")) customElements.define("learning-counter", LearningCounter);
+document.querySelector("learning-counter").addEventListener("valuechange", event => {
+  document.querySelector("#status").textContent = "Observed value: " + event.detail.value;
+});
+</script></body></html>

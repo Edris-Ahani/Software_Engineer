@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Storage failure handling</title><link rel="stylesheet" href="../assets/base.css"><style></style></head>
+<body><header><a href="../">Lab home</a><h1>Storage failure handling</h1></header><main>
+<p>This demo stores only a display preference under frontend-preference-v1.</p>
+<form id="preference"><label for="theme">Theme</label> <select id="theme"><option>system</option><option>light</option><option>dark</option></select>
+<button>Save preference</button></form><p role="status" id="status"></p></main>
+<script type="module">
+const key = "frontend-preference-v1";
+const theme = document.querySelector("#theme");
+const status = document.querySelector("#status");
+try {
+  const raw = localStorage.getItem(key);
+  if (raw !== null) {
+    const value = JSON.parse(raw);
+    if (!["system", "light", "dark"].includes(value)) throw new Error("Invalid saved preference");
+    theme.value = value;
+  }
+  status.textContent = "Preference ready";
+} catch { status.textContent = "Stored preference unavailable. Choose and save to replace it."; }
+document.querySelector("#preference").onsubmit = event => {
+  event.preventDefault();
+  try { localStorage.setItem(key, JSON.stringify(theme.value)); status.textContent = "Preference saved"; }
+  catch { status.textContent = "Saving unavailable; selection remains for this visit."; }
+};
+</script></body></html>

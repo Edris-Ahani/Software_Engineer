@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canvas with data alternative</title><link rel="stylesheet" href="../assets/base.css"><style>canvas { max-inline-size: 100%; block-size: auto; background: #fff; }</style></head>
+<body><header><a href="../">Lab home</a><h1>Canvas with data alternative</h1></header><main>
+<figure><canvas id="chart" width="600" height="180" role="img" aria-label="Weekly tasks: Monday 3, Tuesday 5, Wednesday 2"></canvas>
+<figcaption>Completed tasks per day</figcaption></figure>
+<table><caption>Underlying chart values</caption><thead><tr><th scope="col">Day</th><th scope="col">Tasks</th></tr></thead>
+<tbody><tr><th scope="row">Monday</th><td>3</td></tr><tr><th scope="row">Tuesday</th><td>5</td></tr><tr><th scope="row">Wednesday</th><td>2</td></tr></tbody></table></main>
+<script type="module">
+const canvas = document.querySelector("#chart");
+const context = canvas.getContext("2d");
+if (context) {
+  context.fillStyle = "#2556c7";
+  [3, 5, 2].forEach((value, index) => context.fillRect(40 + index * 180, 160 - value * 25, 100, value * 25));
+}
+</script></body></html>

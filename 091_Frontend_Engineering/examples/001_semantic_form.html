@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Semantic form</title><link rel="stylesheet" href="../assets/base.css"><style></style></head>
+<body><header><a href="../">Lab home</a><h1>Semantic form</h1></header><main>
+<form id="signup"><p><label for="email">Email</label><br><input id="email" name="email" type="email" autocomplete="email" required></p>
+<p><label for="name">Display name</label><br><input id="name" name="name" autocomplete="name" required maxlength="80"></p>
+<button type="submit">Preview signup</button></form><p role="status" id="status"></p></main>
+<script type="module">
+document.querySelector("#signup").addEventListener("submit", event => {
+  event.preventDefault();
+  const values = new FormData(event.currentTarget);
+  document.querySelector("#status").textContent = "Local preview for " + values.get("name") + ". No data was sent.";
+});
+</script></body></html>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>International formatting</title><link rel="stylesheet" href="../assets/base.css"><style></style></head>
+<body><header><a href="../">Lab home</a><h1>International formatting</h1></header><main>
+<label for="locale">Locale</label> <select id="locale"><option>en-US</option><option>fa-IR</option></select>
+<section class="card" id="preview"><h2>Formatted values</h2><p id="money"></p><p id="date"></p><p>Identifier: <bdi>alex@example.com</bdi></p></section></main>
+<script type="module">
+const locale = document.querySelector("#locale");
+function render() {
+  const selected = locale.value;
+  const preview = document.querySelector("#preview");
+  preview.lang = selected; preview.dir = selected === "fa-IR" ? "rtl" : "ltr";
+  document.querySelector("#money").textContent = new Intl.NumberFormat(selected, { style: "currency", currency: "EUR" }).format(1234.5);
+  document.querySelector("#date").textContent = new Intl.DateTimeFormat(selected, { dateStyle: "full", timeZone: "Europe/Berlin" }).format(new Date("2026-01-15T12:00:00Z"));
+}
+locale.onchange = render; render();
+</script></body></html>

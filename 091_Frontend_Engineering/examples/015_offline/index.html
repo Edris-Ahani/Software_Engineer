@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Offline document</title><link rel="stylesheet" href="../../assets/base.css"><style></style></head>
+<body><header><a href="../../">Lab home</a><h1>Offline document</h1></header><main>
+<p>This single document can be cached after the first successful online visit. The lab home and styles are not cached.</p>
+<button id="register">Enable offline document</button> <button id="clear">Remove offline cache</button>
+<p role="status" id="status">Not enabled</p></main>
+<script type="module">
+const status = document.querySelector("#status");
+document.querySelector("#register").onclick = async () => {
+  try {
+    if (!("serviceWorker" in navigator)) throw new Error("Service workers unavailable");
+    await navigator.serviceWorker.register("./016_service_worker.js");
+    status.textContent = "Registered. Wait for activation, reload once online, then test offline.";
+  } catch (error) { status.textContent = error.message; }
+};
+document.querySelector("#clear").onclick = async () => {
+  try {
+    const registration = await navigator.serviceWorker.getRegistration(location.href);
+    await registration?.unregister(); await caches.delete("frontend-offline-document-v1");
+    status.textContent = "Removed. Close this tab to release the old controller.";
+  } catch (error) { status.textContent = error.message; }
+};
+</script></body></html>

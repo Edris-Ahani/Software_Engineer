@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Worker calculation</title><link rel="stylesheet" href="../assets/base.css"><style></style></head>
+<body><header><a href="../">Lab home</a><h1>Worker calculation</h1></header><main>
+<button id="calculate">Sum 1 to 1000000</button> <button id="click">Independent clicks: 0</button><p role="status" id="status">Ready</p></main>
+<script type="module">
+const worker = new Worker("./013_sum_worker.mjs", { type: "module" });
+let clicks = 0; let current = 0;
+document.querySelector("#click").onclick = event => event.currentTarget.textContent = "Independent clicks: " + ++clicks;
+document.querySelector("#calculate").onclick = () => {
+  document.querySelector("#status").textContent = "Calculating";
+  worker.postMessage({ id: ++current, limit: 1000000 });
+};
+worker.onmessage = event => {
+  if (event.data.id === current) document.querySelector("#status").textContent = "Sum: " + event.data.total;
+};
+worker.onerror = () => document.querySelector("#status").textContent = "Worker failed";
+window.addEventListener("pagehide", () => worker.terminate());
+</script></body></html>
